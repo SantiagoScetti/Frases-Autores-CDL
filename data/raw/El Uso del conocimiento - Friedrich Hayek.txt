@@ -1,0 +1,614 @@
+ENSAYO
+El Uso del Conocimiento en la Sociedad *
+F. A. Hayek
+En este ensayo, que ha llegado a ser un clásico de nuestro tiempo,
+Hayek planteó por primera vez su tesis de que el sistema de precios es
+un desarrollo social que ha resultado de la evolución y no del diseño
+deliberado, y que permite detectar y transmitir la información econó-
+mica que se encuentra dispersa y fragmentada entre miles y miles de
+individuos. Emerge así una teoría que  ve en el mercado un método
+de transmisión y utili zación del conocimiento.
+¿Cuál es el  problema que  queremos res olver cuando trata-
+mos de construir un orden económico racional? Basándose en
+ciertos supuestos c omunes, la respuesta es bastante simple. Si po-
+seemos toda la información pertinente y podemos partir de un
+sistema dado de preferencia contando con un c ompleto conoci-
+miento de los medios disponibles, el problema que queda es
+puramente de lógica. En otras palabras, la  respuesta a la
+pregunta referente al mejor uso de los medios disponibles se
+encuentra implícita en  nuestros supuestos. Las condiciones que
+debe satisfacer la solución de este problema óptimo han sido
+detalladamente elaboradas y pueden ser mejor establecidas en
+forma matemática: expresadas brevemente, las tasas marginales
+de substitución e ntre dos bienes o factores cualesquiera deben
+ser iguales en todos sus usos diferentes.
+Sin embargo, éste decididamente  no es el problema econó-
+mico que enfrenta la sociedad. Y el cálculo económico que hemos
+* Traducido del  American Economic Review,  XXXV, Nº 4 (septiembre,
+1945), 519-30 con la debida autorización.
+** Profesor Distinguido de la  Universidad de Friburgo. Premio Nobel de
+Economía, 1974. Sus libros más conocidos son  El camino de la servi-
+dumbre y La Constitución de la Libertad.
+158 ESTUDIOS PÚB LICOS
+desarrollado para resolver este problema lógic o, a pesar de ser
+un paso importante hacia la solución del problema económico de
+la sociedad, aún no proporciona una respuesta a éste. Esto se
+debe a que los "datos" referentes a toda la sociedad a partir
+de los cuales se  origina el cálculo económico no son nunca "da-
+dos" a una sola mente de modo que pueda deducir sus c onse-
+cuencias y nunca, ta mpoco, pueden así ser dados.
+El carácter peculiar del problema de un orden económico
+racional está determinado p recisamente por el hecho de que el
+conocimiento de la s circunstancias que debemos utilizar no se
+encuentra nunca concentrado ni integrado, sino que únicamente
+como elementos dispersos de conocimiento incompleto y fre-
+cuentemente contradictorio en poder de los diferentes individuos.
+De este modo, el problema ec onómico de la sociedad no es
+simplemente un problema de  asignación de recursos "dados"
+—si "dados" quiere decir dados a una sola mente que delibera-
+damente resuelve el problema planteado por estos "datos"—. Se
+trata más bien de un problema referente a cómo lograr el mejor
+uso de los recurso s conocidos por  los miembros de la sociedad,
+para fines cuya  importancia relativa sólo ellos c onocen. O, expre-
+sado brevemente, es un problema de la utilización del conoci-
+miento que no es dado a nadie en su tota lidad.
+Temo que muchos de los últimos av ances de la teoría
+económica han más bien oscurecido en vez de aclarado este
+carácter del problema fundamental, cosa que ocurre especial-
+mente en el caso de muchos de los usos que se han h echo de
+las matem áticas. A pesar de que el problema que quiero tratar
+principalmente en este documento es el  de la organización eco-
+nómica racional, me referiré frecuentemente a sus estrechas
+relaciones con ciertos problemas me todológicos. Muchas de las
+observaciones que quiero hacer son en realidad conclusiones a
+las que han convergido en forma inesperada diversas líneas de
+razonamiento. Pero, según veo ahora los problemas, esto no es
+accidental. Me parece que muchos de los debates actuales sobre
+la teoría y la  política económica tienen su origen común en una
+mala interpretación de la na turaleza del problema económico
+de la sociedad. A su vez, esta mala interpretación se debe a una
+transferencia equivocada a los  fenómenos sociales de los hábitos
+de pensamiento que hemos d esarrollado al ocuparnos de los
+fenómenos de la  naturaleza.
+II
+En lenguaj e corriente, usamos el término "planificación"
+para describir el c onjunto de decisiones interrelacionadas rela-
+tivas a la asignación de nuestros recursos disponibles. En este
+sentido, toda  actividad económica es  planificación, y en toda
+sociedad en la que participan muchas personas, esta planifica-
+ción, quienquiera que la realice, tendrá que basarse en alguna
+EL USO DEL CONOCIMIENTO EN LA SOCIEDAD 159
+medida en conocimiento que no es dado al planificador sino que
+a otras personas cualesquiera y, que de algún modo, deberá ser
+comunicado a éste. Las diversas formas en que la gente a dquiere
+el conocimiento en que  basa sus planes constituye el pr oblema
+más importante para toda teoría que investiga el pro ceso eco-
+nómico. Y el  problema de dete rminar cuál es la mejor forma
+de utilizar el conocimiento inicialmente disperso entre todos los
+individuos constituye, a lo menos, uno  de los principales pro-
+blemas de la política económica, o del diseño de un sistema
+económico eficiente.
+La respuesta a esta pregunta está íntimamente relacionada
+con la otra que  surge aquí, aquella referente a  quién se encarga-
+rá de la planificación. Es en torno a esta última que gira todo
+el debate sobre la "planificación económica". No se trata de
+determinar si debe haber o no planificación, sino que más bien
+si la planificación debe ser efectuada en forma centralizada, por
+una autoridad para todo el sistema económico, o si ésta debe
+ser dividida entre muchos individuos. En el  sentido específico
+en que se usa el término planificación actualmente, éste significa
+necesariamente planificación central, es decir, la dirección de
+todo el sistema económico conforme a un plan unificado. Por
+otra parte, competencia significa planificación descentralizada
+realizada por muchas personas diferentes. El punto intermedio
+entre ambos, acerca  del que muchos hablan pero que a pocos
+les gusta cuando lo ven, es la delegación de la  planificación a
+industrias organizadas o, en otras palabras, a monopolios.
+El grado de eficiencia de estos sistemas depende principal-
+mente del más completo uso del c onocimiento existente que
+podamos esperar de ellos. A su vez, esto depende del éxito que
+podamos tener en poner a disposición de una autoridad central
+todo el conocimiento que se debe usar, pero que inicialmente se
+encuentra disperso entre muchos individuos diferentes, o en
+comunicar a los individuos el conocimiento  adicional que nece-
+sitan para armonizar sus planes con los de los demás.
+III
+Con respecto a este punto, es inmediatamente evidente que
+la posición será di ferente con respecto a los diversos tipos de
+conocimiento. Por lo  tanto, la respuesta a nuestra pregunta se
+orienta principalmente hacia la importancia relativa de los
+diferentes tipos de conocimiento: aquellos que es más probable
+que se encuentren a disposición de individuos particulares y
+aquellos que deberíamos esperar encontrar con mayor se guridad
+en poder de  una autoridad constituida por expertos debidamente
+seleccionados. El hecho de que en la actualidad se dé general-
+mente por sentado que los últimos están en una mejor posición
+se debe a que un tipo de conocimiento, especialment e el cono-
+cimiento científico, ocupa ahora un lugar tan prominente en la
+160 ESTUDIOS PÚBLICOS
+imaginación pública que tend emos a olvidar que no es el único
+tipo de conocimiento pertinente. Se puede admitir que en lo que
+respecta al conocimiento científico, un cu erpo de expertos debi-
+damente sel eccionados puede estar en mejor posición para domi-
+nar todo el mejor conocimiento disponible, a pesar de que esto
+signifique naturalmente trasladar la dificultad al problema de
+seleccionar los expertos. Lo que quiero dejar en claro es que,
+incluso suponiendo que este problema pueda ser fácilmente re-
+suelto, constituye sólo una pequeña parte del pr oblema más
+amplio.
+Hoy en día, es prácticamente una herejía sugerir que el
+conocimiento científico no es la suma de todo el conocimiento.
+Pero una pequeña reflexión demostrará que sin duda existe un
+conjunto de conocimientos muy importantes pero d esorganizado
+que no puede llamarse científico en el  sentido del conocimiento
+de reglas generales: el conocimiento de las circunstancias par-
+ticulares de tiempo y lugar. Es con respecto a éste que práctica-
+mente cualquier individuo tiene cierta ventaja sobre los demás,
+dado que posee cierta información única que puede usarse benefi-
+ciosamente, pero sólo si se dejan a él las decisiones dependiendo
+de dicha información o éstas son tomadas con su activa coopera-
+ción. Basta con recordar todo lo que tenemos que aprender en
+cualquier ocupación después de  haber terminado  el entrena-
+miento te órico, la parte importante  de nuestra vida de trabajo
+que pasamos aprendiendo tareas específicas, y lo valioso que
+es en todos los ámbitos de la vida el c onocimiento de  las per-
+sonas, condiciones locales y circunstancias específicas. El cono-
+cer y poner en uso una máquina que no es completamente em-
+pleada, aprovechar la experiencia de  alguien que puede ser
+mejor utilizada, o tene r conocimiento de  artículos sobrantes que
+pueden aprovecharse durante una interrupción del abastecimien-
+to es socialmente tan útil como el conocimiento de mejores
+técnicas alternativas. El embarcador que se gana la vida apro-
+vechando los viajes de barcos que de otra manera  irían vacíos
+o prácticamente vacíos, el corredor de  propiedades cuyo cono-
+cimiento con frecuencia se reduce al conocimiento de oportuni-
+dades temporales, o el interm ediario que saca ventajas de las
+diferencias locales de los precios  de los productos, todos ellos
+realizan funciones emine ntemente útiles basadas en  el conoci-
+miento especial de las circunstancias del momento que otros no
+poseen.
+Es curioso que en la actualidad se mire en general a esta
+clase de conocimientos con cierto desprecio y se considere que
+alguien ha actuado casi escandalosamente cuando haciendo uso
+de este c onocimiento obtiene ventajas sobre otro que posee
+conocimientos técnicos o teóricos. El hecho de sacar ventaja
+de un mejor conocimiento de los medios de comunicación o de
+transporte es considerado a veces como algo casi deshonesto, a
+pesar de que es tan importante que la sociedad haga uso de las
+EL USO DEL CONOCIMIENTO EN LA SOCIEDAD 161
+mejores oportunidades en este aspecto como de los últimos des-
+cubrimientos científicos. Este prejuicio ha influido considera-
+blemente en la actitud con respecto al comercio en general
+comparado con la producción. Incluso los economistas que se
+consideran inmunes a las burdas falacias materialistas del
+pasado comente en forma constante el  mismo error en lo concer-
+niente a las actividade s relativas a la adquisición de dicho
+conocimiento práctico,  aparentemente porque en su esquema de
+las cosas todo este conocimiento se supone "dado". En la a ctua-
+lidad, por lo general, parece pensarse que todo este conocimiento
+debiera encontrarse con frecuencia disponible para  cualquier
+persona, y el calificativo de irracional usado en contra del orden
+económico existente se debe a menudo a que este conocimiento
+no se encuentra así disponible. Este punto de vista no considera
+el hecho de que el método mediante el cual este conocimiento
+puede ponerse a dis posición del mayor número de personas
+posibles constituye en rigor el problema preciso que tenemos
+que resolver.
+IV
+Si ahora está de moda minimizar la  importancia del
+conocimiento de las circunstancias particulares de tiempo y
+lugar, esto está íntimamente relacionado con la  menor impor-
+tancia que se concede al ca mbio en sí. En realidad, son pocos
+los puntos en que  los supuestos (en general sólo implícitos)
+de los "planificadores" difieren tanto de los de sus oposi tores
+como en lo referente a la importancia y frecuencia de los cam-
+bios que harán necesaria la realización de importantes modi-
+ficaciones en los planes de producción. Naturalmente, si fuera
+posible trazar de antemano planes económicos detallados para
+períodos bastante largos que fueran con estrictez cumplidos
+de manera que no fuera necesario tomar nuevas decisiones
+económicas de importancia, la tarea de elaborar  un plan general
+que abarcara toda la  actividad económica sería mucho menos
+difícil.
+Tal vez vale la pena recalcar que los problemas económicos
+surgen sie mpre y exclusivamente como consecuencia del ca mbio.
+En la medida en que las cosas s iguen igual que antes o, al menos,
+como se esperaba que ocurriera, no surgen nuevos problemas
+que requieran de decisión ni tampoco es  necesario elaborar un
+nuevo plan. La creencia de que los cambios o, al menos, los
+ajustes cotidianos se han  vuelto menos importantes en los
+tiempos modernos lleva implícita la opinión de que los problemas
+económicos también se han vuelto menos importantes. Por esa
+razón, quienes creen en la significación cada ve z menor del cam-
+bio son generalmente los mismos que sostienen que la impor-
+tancia de las consideraciones económicas ha  pasado a se gundo
+plano debido a la creciente utilidad del conocimiento tec nológico.
+162 ESTUDIOS PÚBLICOS
+¿Es cierto que, con el complejo aparato de producción mo-
+derna, las decisiones económicas son necesarias sólo de tarde
+en tarde, como por ejemplo, cuan do se va a construir una nueva
+fábrica o se va a introducir un  nuevo pr oducto? ¿Es cierto que
+una vez que se ha construido una planta, todo lo demás es más o
+menos mecánico y está determinado por el carácter de la planta
+y queda poco por hacer en cuanto a adaptación a las siempre
+cambiantes circunstancias del momento?
+La creencia harto común en el sentido afirmativo no está
+sustentada, hasta  donde yo puedo darme cuenta, por la expe-
+riencia práctica del empresario. En todo caso, en una industria
+competitiva, y sólo una industria de este tipo puede servir de
+prueba, la tarea de evitar que suban los costos requiere de una
+lucha constante que absorbe una parte importante de la energía
+del administrador. La  facilidad con que un administrador ine-
+ficiente puede desperdiciar los diferenciales en que se basan
+las utilidades y la  posibilidad de producir con las mismas ins-
+talaciones técnicas y con una gran variedad de costos, se
+encuentra entre los hechos más conocidos de la experiencia
+empresarial que no parecen ser igualmente conocidos por el
+economista. La misma  intensidad del deseo, constantemente
+repetido por los productore s e ingenieros en el  sentido de que
+se les permita proceder sin trabas por concepto de costos mone-
+tarios, constituye un testimonio elocuente de la medida en que
+estos factores influyen en su trabajo diario.
+Una razón por la que los ec onomistas tienden cada vez más
+a olvidar los constantes cambios pequeños que constituyen el
+cuadro económico global es probablemente su creciente preocu-
+pación por los agregados estadísticos que muestran una estabili-
+dad mucho mayor que los movimientos del detalle. Sin embargo,
+la comparativa estabilidad de lo s agregados no puede ser expli-
+cada por la "ley de los grandes números" o la mutua compensa-
+ción de los  cambios al azar, como a v eces los estadísticos  parecen
+verse inclinados a pensar. El número de elementos que tenemos
+que manejar no es lo suficientemente grande como para que
+estas fuerzas accidentales produzcan estabilidad. El flujo con-
+tinuo de bienes y servicios se mantiene mediante constantes
+ajustes deliberados, mediante nuevas disposiciones tomadas día
+a día a la luz de circunstancias no conocidas el día anterior, o
+por B que entra en acción apenas A no cumple. Incluso la  gran
+planta altamente mecanizada sigu e en operación debido a un
+medio ambiente al que puede recurrir para todo tipo de necesi-
+dades imprevistas:  tejas para su techo, papel para sus formula-
+rios, y todo tipo de  equipos con respecto a los cuales no puede
+ser independiente y que, de acuerdo a los planes de operación
+de la planta, deben estar fácilmente disponibles en el mercado.
+Tal vez, éste es ta mbién el punto en que debería mencionar
+brevemente el hecho de que el tipo  de conocimiento a que me
+he referido es aquel que por su naturaleza no puede formar parte
+EL USO DEL CONOCIMIENTO EN LA SOCIEDAD 163
+de las estadísticas ni, por c onsiguiente, ser transmitido a nin-
+guna autoridad central en forma esta dística. Las estadísticas que
+debería usar tal autoridad central deberían obtenerse precisa-
+mente haciendo abstracción de las pequeñas diferencias entre
+las cosas, y juntando, como recursos de  un mismo tipo, los ele-
+mentos que difieren con respecto al lugar, calidad y otros aspec-
+tos particulares, en una forma que puede ser muy significativa
+para la decisión espec ífica. De esto se deduce que la planifica-
+ción central basada en información estadística, por su natura-
+leza, no puede considerar directamente estas circunstancias de
+tiempo y lugar y que el planificador ce ntral tendrá que encon-
+trar alguna forma en que las decisiones de pendientes de ellas
+puedan ser dejadas al " hombre que está en el terre no".
+V
+Si estamos de acuerdo en que el problema económico de la
+sociedad se refiere principalmente a la pronta adaptación a los
+cambios según circunstancias particulares de  tiempo y lugar,
+se podría inferir que las decisiones finales deben dejarse a quie-
+nes están familiarizados con estas circ unstancias, a quienes
+conocen de primera mano los cambios pertinentes y los recursos
+disponibles de inmediato para satisfacerlos. No podemos esperar
+resolver este problema comunicando primero todo este conoci-
+miento a una junta central, la que, después de integrarlo, dicta
+órdenes Es preciso resolverlo por medio de alguna forma des-
+centralizada. Pero esto soluciona sólo parte de nuestro problema.
+Necesitamos la descentralización porque sólo así podemos ase-
+gurar que el conocimiento de las circ unstancias particulares de
+tiempo y lugar será prontamente utilizado. Pero el hombre que
+está en el terreno no puede decidir a base de  un conocimiento
+limitado pero profundo de los acontecimientos de su medio
+ambiente inmediato. Aú n queda el problema de comunicarle la
+información adic ional que necesita para hacer calzar sus deci-
+siones dentro del patrón  general de cambios de todo el sistema
+económico.
+¿Cuánto conocimiento necesita para realizar esto con éxito?
+¿Cuáles acontecimientos de los que  ocurren más allá del hori-
+zonte de su  conocimiento inmediato tienen relación con su
+decisión inmediata, y cuánto necesita saber acerca de ellos?
+Es difícil que haya algo de lo que ocurre en el mundo que
+no influya en la decisión que debe tomar. Pero no  necesita co-
+nocer todos estos acontecimientos como tales, ni ta mpoco todos
+sus efectos. No le importa la  razón por la que en un determinado
+momento se necesiten más tornillos de un tamaño que de otro,
+ni por qué las bolsas de papel se consiguen más fácilmente que
+las de tela, ni por qué sea más difícil conseguir trabajadores
+especializados o una máquina determinada. Todo lo que le im-
+porta es determinar  cuán difícil de obtener se han vuelto estos
+164 ESTUDIOS PÚBLICOS
+productos en comparaci ón con otros que también le interesan,
+o el grado de urgencia con que se necesitan los productos alter-
+nativos que produce o usa. Siempre es un problema de la impor-
+tancia relativa de las cosas específicas que le interesan, y las
+causas que alteran su importancia relativ a no tienen interés
+para él aparte del efecto en aquellas cosas concretas de su medio
+ambiente.
+Es en relación con esto que lo que he denominado "cálculo
+económico" (o lógica pura de la elección) nos ayuda, al menos
+por analogía, a ver la forma en que se puede resolver el problema,
+que de hecho  se resuelve mediante el sistema de precios. Incluso
+la única mente controladora, en poder de todos los datos para
+un pequeño sistema económico independiente, no podría —cada
+vez que fuera necesario hacer algunos pequeños ajustes en la
+asignación de recursos— analizar todas las relaciones entre
+fines y medios que podrían verse afectadas. En rea lidad, la gran
+contribución de la lógica pura de la elección es que ha demos-
+trado en forma concluyente que incluso esta mente únic a podría
+resolver este tipo de problemas sólo construyendo y usando
+constantemente tasas de equivalencia (o "valores", o "tasas
+marginales de substitución"), es decir,  asignando a cada tipo de
+recurso escaso un indicador numérico que no puede derivarse
+de ninguna propiedad que posea dicho objeto específico, pero que
+refleja, o en el que está condensada, su importancia en vista
+de toda la estructura medios-finés. En  cualquier cambio pequeño,
+tendrá que c onsiderar sólo e stos indicadores cuantitativos (o
+"valores") en los que se encuentra concentrada toda la infor-
+mación pertinente; y ajustando las cantidades una por una,
+puede volver a ordenar debidamente todas sus disposiciones sin
+tener que resolver todo el puzzle  ab initio  o sin tener que revi-
+sarlo en ninguna etapa en todas sus ramificaciones.
+Fundamentalmente, en un sistema en que  el conocimiento
+de los hechos pertinentes se encuentra disperso entre muchas
+personas, los precios pueden actuar para co ordinar las acciones
+separadas de diferentes personas en la misma manera en que
+los valores subjetivos ayudan al individuo a coordinar las partes
+de su plan. Vale la pena considerar brevemente un ejemplo muy
+sencillo y corriente de la acción del sistema de precios para
+comprender lo que precisamente realiza. Supongamos que en
+alguna parte del mundo ha surgido una nueva oportunidad
+para el uso de alguna materia prima, por ejemplo, el estaño o
+que se ha eliminado una de las fuentes de su ministro de éste.
+Para nuestro propósito, no tiene importancia —y el hecho de
+que no tenga importancia es en sí importante— cuál de estas
+dos causas ha provocado la escasez del estaño. Todo lo que los
+consumidores de estaño necesitan saber es que una parte del
+estaño que  consumían está siendo ahora empleado más rentable-
+mente en otro lugar y que, por consiguiente, deben economizar
+su uso. La gran mayoría de ellos no necesita ni siquiera saber
+EL USO DEL CONOCIMIENTO EN LA SOCIEDAD 165
+dónde se ha producido la necesidad más urge nte, o en favor de
+qué otras necesidades deben manejar prudentemente la oferta.
+Si sólo algunos de ellos saben directamente de la nueva demanda
+y orientan recursos hacia ella, y si la gente que está consciente
+de este vacío así producido lo llena a su vez con otros recursos,
+el efecto se extenderá rápidamente a todo el sistema económico
+e influirá en no sólo todos los usos del estaño, sino que también
+en aquellos de sus  substitutos y los substitutos de estos substitu-
+tos, la oferta de todos los productos hechos de estaño, sus subs-
+titutos y así  sucesivamente. Todo esto sucede sin que la gran
+mayoría de quienes contribuyen a efectuar tales substituciones
+conozca la causa original de estos cambios. El todo actúa como
+un mercado, no porque alguno de sus miembros  tenga una vi-
+sión de todo el campo, sino porque sus limitados campos indivi-
+duales de visión se traslapan suficientemente de manera que la
+información pertinente es  comunicada a todos a través de mu-
+chos intermediarios. El simple hecho de que existe un precio
+para cada producto —o mejor dicho, que los precios locales
+están relacionados en una forma determinada por el costo del
+transporte, etc.—, proporciona la solución a que podría haberse
+llegado (cosa sólo conceptualmente posible) con una sola mente
+en poder de toda la i nformación que de hecho se encuentra
+dispersa entre todas las personas que participan en el proceso.
+VI
+Para comprender la verdadera función del sistema de pre-
+cios —función que, naturalmente, cumple en forma menos per-
+fecta cuando los p recios se vuelven más rígidos— debemos con-
+siderar dicho sistema como un m ecanismo para comunicar in-
+formación. (Sin embargo, incluso cuando los precios cotizados
+se han vuelto bastante rígidos, las fuerzas que operarían a través
+de cambios en los precios aún operan en una medida conside-
+rable a través de cambios en los otros términos del contrato).
+El hecho más significativo acerca de este sistema es la economía
+de conocimientos con qu e opera, o lo poco que necesitan saber
+los participantes  individuales para poder tomar la decisión
+correcta. En resumen, mediante una especie de símbolo, se
+comunica sólo la información más esencial y sólo a quienes les
+concierne. Es más que una metáfora el describir el sistema de
+precios como una especie de maquinaria para registrar el cam-
+bio, o un sistema de telecomunicaciones que permite a los pro-
+ductores individuales observar solamente el movimiento de unos
+pocos indicadores, tal como un ingeniero puede mi rar las agujas
+de unos pocos medidores, a fin de ajustar sus actividades a los
+cambio acerca de los cuales puede que nunca sepan ellas más que
+lo que está reflejado en el movimiento de precios.
+Naturalmente, es probable que estos ajustes no sean nunca
+"perfectos" en el sentido en que el economista los concibe en
+166 ESTUDIOS PÚBLICOS
+su análisis de equilibrio. Pero temo que nuestros hábitos teóri-
+cos de abordar el problema basándonos en el supuesto de que
+prácticamente todos contamos con un conocimiento más  o menos
+perfecto nos han im pedido ver la verdadera función del mecanis-
+mo de precios y nos han llevado a aplicar patrones más bien
+engañosos al juzgar su eficiencia. Lo mara villoso es que en un
+caso como el de la escasez de una materia prima, si n que se
+dicte ninguna orden ni que la causa de ello sea conocida más
+que, tal vez, por una decena de personas, ocurre que millones
+de personas, cuya identidad no podría ser determinada con me-
+ses de investigación, reduzca el uso de la materia prima o sus
+productos; es decir, de hecho sucede que se mueven en la direc-
+ción correcta. Esta es ya una maravilla incluso si, en un mundo
+constantemente cambiante, no todos reaccionaran tan  perfecta-
+mente de manera que sus tasas de rentabilidad se mantuvieran
+siempre al  mismo nivel uniforme o "normal".
+He usado deliberadamente el término "maravilla" para sa-
+car al lector de la complacencia con que frecuentemente consi-
+deramos el funcionamiento de este mecanismo como algo na-
+tural. Estoy convencido de que si este fuera el resultado de la
+invención humana deliberada, y si la gente guiada por los
+cambios de p recios comprendiera que sus decisiones tienen
+trascendencia mucho más allá de su objetivo inmediato, este
+mecanismo hubiera sido aclamado como uno de los mayores
+triunfos del intelecto humano. Su desventura es doble en el
+sentido de que no es el producto de la invención humana y que
+las personas guiadas por él generalmente no saben por qué son
+llevadas a hacer lo qu e hacen. Pero aquellos que claman por
+una "dirección consciente" —y que no pueden creer que algo
+que ha evolucionado si n ser diseñado (e incluso sin ser compren-
+dido) pueda  resolver problemas que no seríamos capaces de
+resolver conscientemente— deberían recordar lo siguiente: El
+problema consiste precisamente en cómo extender el campo de
+nuestra utilización  de los recursos más allá del campo de  control
+de una sola mente; y, por consiguiente, en  cómo eliminar la ne-
+cesidad del control consciente  y crear incentivos para que los
+individuos hagan lo que es convenien te sin que nadie tenga que
+decirles qué hacer.
+El problema que enfrentamos aquí no es de ninguna manera
+característico de la economía.  Surge en  relación con casi todos
+los verdaderos problemas sociales, con el lenguaje y con gran
+parte de nuestra herencia cultural, y cons tituye realmente el
+problema teórico central de toda la ciencia social. Tal como
+Alfred Whitehead ha señalado en otro c ontexto: "La  afirmación
+de que debemos cultivar el hábito de pensar lo que estamos
+haciendo constituye un axioma profundamente erróneo repetido
+en todos los libros y por eminentes personas al dictar con feren-
+cias. La verdad es exactamente lo contrario. La civilización
+avanza al aumentar la cantidad de operaciones importantes que
+EL USO DEL CONOCIMIENTO EN LA SOCIEDAD 167
+podemos realizar sin pensar acerca de ellas". Esto tiene mucha
+importancia en el campo social. Constantemente usamos fórmu-
+las, símbolos y reglas cuyo significado no comprendemos y
+haciendo esto nos valemos de la ayuda de conocimiento que
+individualmente no poseemos. Hemos desarrollado e stas prác-
+ticas e instituciones construyendo sobre hábitos e instituciones
+que han resultado exitosos en su propia esfera y que, a su vez,
+han pasado a ser la  base de la civilización que hemos construido.
+El sistema de precios es precisamente una de esas forma-
+ciones que el hombre ha aprendido  a usar (a pesar de que aún
+está muy lejos de haber aprendido a hacer el mejor uso de ella)
+después de haberse visto enfrentado a ella sin entenderla. Con
+ella ha sido posible  no sólo una división del trabajo, sino que
+también un uso coordinado de los recursos basado en un cono-
+cimiento igualmente dividido. A quienes les gusta ridiculizar
+toda sugerencia de que esto pueda ser así, generalme nte, distor-
+sionan el argumento insinuando que, según éste, dicho sistema
+ha surgido por algún milagro  espontáneo siendo el más apro-
+piado para la civilización moderna. Lo que sucede es exactamen-
+te lo contrario: el hombre ha sido capaz de c onseguir la división
+del trabajo en que se basa nuestra c ivilización porque se vio
+ante un método que lo hizo posible. Si no hubiera hecho eso,
+podría haber desarrollado otro tipo de civilización completa-
+mente diferente, algo así como el "estado" de las hormigas
+termitas, o algún otro tip o totalmente inimaginable. Todo lo
+que podemos decir es que nadie ha logrado aún diseñar un sis-
+tema alternativo en el que puedan p reservarse ciertas carac-
+terísticas del existente que son estimadas incluso por aquellos
+que lo atacan más  violentamente tales como, por ejemplo, el
+grado en que el individuo —bajo este sistema— puede elegir
+sus metas y,  por consiguiente, usar libremente sus propios cono-
+cimientos y habilidades.
+VII
+En muchos sentidos es positivo que el debate acerca de la
+necesidad del  sistema de precios para todo cálculo racional en
+una sociedad compleja, ya no sea conducido totalmente entre
+grupos con ideas políticas diferentes. La tesis de que sin el
+sistema de precios no podríamos preservar una sociedad basada
+en una división del trabajo tan amplia como la nuestra fue re-
+cibida con una carcajada cuando fue presentada por primera
+vez por Von Mises hace 25 años. Actualme nte, las dificultades
+que tienen algunos para aceptarla ya no son principalmente
+políticas, lo que  contribuye a una atmósfera mucho más propicia
+para la discusión  racional. Las diferencias ya no  pueden a tri-
+buirse a prejuicios políticos cuando nos encontramos con León
+Trotsky sosteniendo que "la contabilidad económica es incon-
+cebible sin relaciones de mercado", cuando el profesor Osear
+168 ESTUDIOS PÚBLICOS
+Lange promete al profesor Von Mises una estatua en los sa-
+lones de mármol del futuro Comité Central de Planificación y
+cuando el profesor Abba P. Lerner redescubre a Adam Smith
+y recalca que la utilidad esencial del sistema de precios radica
+en inducir al individuo , mientras persigue su propio interés, a
+hacer lo que es de interés general. El desacuerdo restante parece
+deberse cl aramente a diferencias meramente intelectuales y,
+especialmente, de  orden metodológico.
+Una reciente afirmación hecha por Joseph Sc humpeter en
+su obra Capitalismo, Socialismo y Democracia  proporciona un
+claro ejemplo de una de  las diferencias metodológicas  que tengo
+en mente. Su autor es muy conocido entre los ec onomistas que
+analizan los fenómenos económicos a la luz de una cierta co-
+rriente del positivismo. Según él, estos fenómenos surgen , por
+consiguiente, como ca ntidades de bienes objetivamente dadas
+interactuando directamente entre sí casi como si no hubiera
+ninguna intervención de la mente humana. Sólo en base a esto
+puedo explicar la  siguiente opinión (para mí sorprendente). El
+profesor Schumpeter sostiene que la posibilida d de un cálculo
+racional en ausencia de mercados para  los factores de la pro-
+ducción se deduce para el teórico "de la proposición elemental
+de que los consumidores al evaluar ("demandar") los bienes de
+consumo ipso facto también evalúan los medios de  producción
+que participan en la producción de estos bienes" 1.
+Tomada lit eralmente, esta afirmación es simplemente falsa.
+Los consumidores no hacen nada de este tipo. Lo que el profesor
+Schumpeter probablemente quiere d ecir con ipso facto es que
+la evaluación de los factores de producción está implícita en la
+evaluación de los bienes de consumo o se deduce necesariamente
+de ella. Pero esto tampoco es correcto. La implicación es una
+1 Capitalism, Socialism and Democracy  (New York: Harper & Bros., 1942),
+p. 175. Creo que el profesor Schumpeter es también el a utor original del
+mito de que Pareto y Barone han "solucionado" el problema del cálculo
+socialista. Al igual que muchos otros, lo que ellos hicieron fue simple-
+mente establ ecer las condiciones que tendría que satisfacer una asigna-
+ción racional de los recursos e indicaron que éstas eran esencialmente las
+mismas que las condiciones de equilibrio de un mercado competitivo.
+Esto es algo completamente diferente a demostrar la forma en que esta
+asignación de recursos puede  realizarse en la práctica satisfaciendo estas
+condiciones. El  mismo Pareto (del que Barone ha tomado prácticamente
+todo lo que tiene que decir), lejos de afirmar haber resuelto el problema
+práctico, de hecho explícitamente niega que éste pueda solucionarse sin
+la ayuda del mercado. Consúltese su  Manuel d'économie pure  (2a edición,
+1927), pp. 233-34. El párrafo pertinente aparece citado en una traduc-
+ción inglesa al principio de mi artículo sobre "Cálculo Socialista: la 'So-
+lución' Competitiva", en  Económica,  VIH, Nº 26 (1940). Ver  Estudios
+Públicos Nº 10.
+EL USO DEL CONOCIMIENTO EN LA SOCIEDAD 169
+relación lógica que puede manifestarse significativamente sólo
+en el caso de proposiciones presentes a la vez en una sola inte-
+ligencia. Sin emba rgo, es evidente que los valores de los factores
+de producción no dependen sólo de la evaluación de los bienes
+de consumo, sino que tambié n de las condiciones de oferta de
+los diversos factores de  producción. Sólo en el caso de una
+inteligencia que conozca todos esto s hechos a la vez la res-
+puesta se deducirá necesariamente de los hechos dados a ella.
+Sin embargo, el problema práctico  surge precisamente  debido a
+que estos hechos no son nunca dados así a una sola mente, y
+por consiguiente, en la solución del problema, es necesario usar
+conocimientos que se encuentran dispersos entre muchas per-
+sonas.
+De este modo, el problema no está de ninguna manera
+resuelto al demostrar que todos los hechos, si fueran conocidos
+por una sola inteligencia (como por hipó tesis suponemos que son
+dados a los economistas observadores), determinarían original-
+mente la solución. Debemos demostrar, en cambio, cómo se logra
+una solución mediante las interacciones de personas cada una
+de las cuales posee sólo un conocimiento parcial. Suponer que
+todo el conocimiento es dado a una sola mente de la misma ma-
+nera en que es dado a nosotros como economistas investigadores,
+es suponer que el problema no existe y pasar por alto todo lo
+que es importante y significativo en el mundo real.
+El hecho de que un  economista de la re putación del profesor
+Schumpeter haya caído así en una trampa que la ambigüedad
+del término "dato" tiende a los  incautos, difícilmente puede ser
+explicado como un simple error. Sugiere, más bien, que hay algo
+fundamentalmente incorrecto en un enfoque que  habitualmente
+no toma en cuenta una parte esencial de los fenómenos que
+tenemos que tratar: la inevitable imp erfección del conocimiento
+humano y la consiguiente necesidad de un proceso mediante el
+cual el conocimiento sea constantemente comunicado y adqui-
+rido. Cualquier enfoque, tal como el de gran parte de la econo-
+mía matemática con sus ecuaciones simultáneas, que  efectiva-
+mente parte del supuesto de que el  conocimiento  de las personas
+corresponde a los  hechos objetivos de la situación, deja sistemá-
+ticamente afuera nuestra principal tarea. Estoy lejos de negar
+que nuestro sistema de análisis de equil ibrio tenga una función
+útil que desempeñar. Pero cuando llega al punto en que deso-
+rienta a algunos de nuestros pensadores más destacados hacién-
+dolos creer que la situación que describe tiene directa relación
+con la solució n de los problemas prácticos, es tiempo de recordar
+que ese método no se ocupa del proceso social en absoluto y
+que no es más que un úti l prolegómeno al  estudio del problema
+principal.
