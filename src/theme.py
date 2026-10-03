@@ -1324,8 +1324,8 @@ def get_theme_css(is_dark: bool = True) -> str:
             width: 100% !important;
             max-width: 100% !important;
             margin: 0.5rem 0 1rem 0 !important;
-            padding: 0 !important;
-            border-radius: 24px !important;
+            padding: 3px !important;
+            border-radius: 26px !important;
             box-sizing: border-box !important;
             overflow: hidden !important;
             border: 1.5px solid {seg_border} !important;
@@ -1339,12 +1339,12 @@ def get_theme_css(is_dark: bool = True) -> str:
             display: flex !important;
             flex-direction: column !important;
             flex-wrap: nowrap !important;
-            gap: 0 !important;
+            gap: 2px !important;
             width: 100% !important;
             padding: 0 !important;
             margin: 0 !important;
             border-radius: 24px !important;
-            overflow: hidden !important;
+            overflow: visible !important;
         }}
 
         html body .stApp div[class*="st-key-modo_generador_selector"] button,
@@ -1352,7 +1352,7 @@ def get_theme_css(is_dark: bool = True) -> str:
             width: 100% !important;
             min-height: 48px !important;
             margin: 0 !important;
-            border-radius: 0 !important;
+            border-radius: 22px !important;
             border: none !important;
             display: flex !important;
             justify-content: center !important;
@@ -1363,57 +1363,17 @@ def get_theme_css(is_dark: bool = True) -> str:
             transition: all 0.15s ease !important;
         }}
 
-        /* Opción 1 (Inspiración Libre): Cuando está activa abraza perfectamente la cúpula superior */
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:first-child[aria-checked="true"],
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:first-of-type[aria-checked="true"],
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:first-child[data-selected],
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:first-of-type[data-selected],
-        html body .stApp div[class*="modo_generador_selector"] button:first-child[aria-checked="true"],
-        html body .stApp div[class*="modo_generador_selector"] button:first-of-type[aria-checked="true"],
-        html body .stApp div[class*="modo_generador_selector"] button:first-child[data-selected],
-        html body .stApp div[class*="modo_generador_selector"] button:first-of-type[data-selected] {{
+        /* Opción seleccionada: Totalmente redondeada como píldora en todas las posiciones */
+        html body .stApp div[class*="st-key-modo_generador_selector"] button[aria-checked="true"],
+        html body .stApp div[class*="st-key-modo_generador_selector"] button[data-selected],
+        html body .stApp div[class*="modo_generador_selector"] button[aria-checked="true"],
+        html body .stApp div[class*="modo_generador_selector"] button[data-selected] {{
             background-color: #E85D04 !important;
             background: #E85D04 !important;
             color: #FFFFFF !important;
             -webkit-text-fill-color: #FFFFFF !important;
-            border-top-left-radius: 22px !important;
-            border-top-right-radius: 22px !important;
-            border-bottom-left-radius: 4px !important;
-            border-bottom-right-radius: 4px !important;
-            box-shadow: none !important;
-        }}
-
-        /* Opción 2 (Buscar Cita Exacta): Recta y limpia en el centro */
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:nth-child(2)[aria-checked="true"],
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:nth-child(2)[data-selected],
-        html body .stApp div[class*="modo_generador_selector"] button:nth-child(2)[aria-checked="true"],
-        html body .stApp div[class*="modo_generador_selector"] button:nth-child(2)[data-selected] {{
-            background-color: #E85D04 !important;
-            background: #E85D04 !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-            border-radius: 4px !important;
-            box-shadow: none !important;
-        }}
-
-        /* Opción 3 (Explorar Autor): Cuando está activa abraza perfectamente la curvatura inferior */
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:last-child[aria-checked="true"],
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:last-of-type[aria-checked="true"],
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:last-child[data-selected],
-        html body .stApp div[class*="st-key-modo_generador_selector"] button:last-of-type[data-selected],
-        html body .stApp div[class*="modo_generador_selector"] button:last-child[aria-checked="true"],
-        html body .stApp div[class*="modo_generador_selector"] button:last-of-type[aria-checked="true"],
-        html body .stApp div[class*="modo_generador_selector"] button:last-child[data-selected],
-        html body .stApp div[class*="modo_generador_selector"] button:last-of-type[data-selected] {{
-            background-color: #E85D04 !important;
-            background: #E85D04 !important;
-            color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-            border-top-left-radius: 4px !important;
-            border-top-right-radius: 4px !important;
-            border-bottom-left-radius: 22px !important;
-            border-bottom-right-radius: 22px !important;
-            box-shadow: none !important;
+            border-radius: 22px !important;
+            box-shadow: 0 2px 6px rgba(232, 93, 4, 0.4) !important;
         }}
 
         /* Jerarquía Tipográfica y Espaciado Compacto en Móvil */
@@ -1468,11 +1428,11 @@ def get_theme_css(is_dark: bool = True) -> str:
         }}
 
         /* Ocultamiento blindado de botones de scroll BaseWeb en móvil */
-        html body .stApp [data-testid="stTabs"] button:not([role="tab"]),
-        html body .stApp [data-testid="stTabs"] [role="button"]:not([role="tab"]),
-        html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"] button:not([role="tab"]),
-        html body .stApp [data-testid="stTabs"] *[class*="ScrollButton"],
-        html body .stApp [data-testid="stTabs"] *[class*="scroll-button"] {{
+        html body .stApp [data-testid="stTabs"] > div:first-child button:not([role="tab"]),
+        html body .stApp [data-testid="stTabs"] > div:first-child [role="button"]:not([role="tab"]),
+        html body .stApp [data-testid="stTabs"] > div:first-child [data-baseweb="tabs"] button:not([role="tab"]),
+        html body .stApp [data-testid="stTabs"] > div:first-child *[class*="ScrollButton"],
+        html body .stApp [data-testid="stTabs"] > div:first-child *[class*="scroll-button"] {{
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
