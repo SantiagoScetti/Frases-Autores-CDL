@@ -1361,18 +1361,18 @@ with tab_admin:
 # ═══════════════════════════════════════════════════════════════════════════════
 # FOOTER INSTITUCIONAL
 # ═══════════════════════════════════════════════════════════════════════════════
-st.markdown("""
-<div class="cdl-app-footer" style="margin-top: 6rem; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem 4.5rem 1rem; border-top: 1.5px solid rgba(255,255,255,0.08); box-sizing: border-box;">
+st.markdown(f"""
+<div class="cdl-app-footer" style="margin-top: 4rem; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem 1rem 4.5rem 1rem; border-top: 1px solid {'rgba(255,255,255,0.08)' if is_dark_mode else 'rgba(0,0,0,0.08)'}; box-sizing: border-box;">
     <div class="cdl-footer-content" style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
-        <span style="font-size: 0.95rem; color: #94A3B8;">Desarrollada por</span>
-        <a href="https://www.linkedin.com/in/santiago-scetti" target="_blank" rel="noopener noreferrer" class="cdl-footer-badge" style="color: #E85D04; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 6px; background: rgba(232,93,4,0.12); border: 1px solid rgba(232,93,4,0.3);">
+        <span style="font-size: 0.95rem; color: {'#94A3B8' if is_dark_mode else '#64748B'};">Desarrollada por</span>
+        <a href="https://www.linkedin.com/in/santiago-scetti" target="_blank" rel="noopener noreferrer" class="cdl-footer-badge" style="color: #E85D04; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 6px; background: {'rgba(232,93,4,0.12)' if is_dark_mode else 'rgba(232,93,4,0.08)'}; border: 1px solid {'rgba(232,93,4,0.3)' if is_dark_mode else 'rgba(232,93,4,0.2)'};">
             <span>Santi Scetti</span>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45c-.9 0-1.63.73-1.63 1.63a1.63 1.63 0 1 0 3.26 0c0-.9-.73-1.63-1.63-1.63Z"/></svg>
         </a>
-        <span style="font-size: 0.95rem; color: #94A3B8;">para el <strong style="color: #F8FAFC;">Club de la Libertad</strong></span>
+        <span style="font-size: 0.95rem; color: {'#94A3B8' if is_dark_mode else '#64748B'};">para el <strong style="color: {'#F8FAFC' if is_dark_mode else '#0F172A'};">Club de la Libertad</strong></span>
     </div>
-    <div class="cdl-footer-sub" style="font-size: 0.8rem; color: #64748B; margin-top: 0.35rem; text-align: center;">
-        <span>Corrientes, Argentina · Sistema Editorial RAG &amp; IA</span>
+    <div class="cdl-footer-sub" style="font-size: 0.8rem; color: {'#64748B' if is_dark_mode else '#94A3B8'}; margin-top: 0.35rem; text-align: center;">
+        <span>Corrientes, Argentina • Sistema Editorial RAG &amp; IA</span>
     </div>
 </div>
 """, unsafe_allow_html=True)

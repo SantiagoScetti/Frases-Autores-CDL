@@ -345,24 +345,20 @@ def get_theme_css(is_dark: bool = True) -> str:
     html body .stApp .stButtonGroup:has(button[data-variant="segmented_control"]) {{
         background-color: {seg_bg} !important;
         border: 1.5px solid {seg_border} !important;
-        border-radius: 9999px !important;
+        border-radius: 14px !important;
         padding: 3px !important;
         box-shadow: none !important;
         gap: 0 !important;
     }}
 
     html body .stApp [data-testid="stSegmentedControl"] [data-baseweb="button-group"],
-    html body .stApp [data-testid="stButtonGroup"] > div,
-    html body .stApp .stButtonGroup > div {{
+    html body .stApp [data-testid="stSegmentedControl"] > div {{
         background: transparent !important;
         background-color: transparent !important;
         border: none !important;
-        border-radius: 9999px !important;
+        border-radius: 14px !important;
         gap: 3px !important;
         padding: 0 !important;
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
         align-items: center !important;
     }}
 
@@ -380,7 +376,7 @@ def get_theme_css(is_dark: bool = True) -> str:
         outline: none !important;
         color: {seg_unselected_text} !important;
         -webkit-text-fill-color: {seg_unselected_text} !important;
-        border-radius: 9999px !important;
+        border-radius: 10px !important;
         font-size: 0.84rem !important;
         font-weight: 600 !important;
         padding: 0.38rem 1rem !important;
@@ -406,6 +402,7 @@ def get_theme_css(is_dark: bool = True) -> str:
         color: {text_primary} !important;
         -webkit-text-fill-color: {text_primary} !important;
         border: none !important;
+        border-radius: 10px !important;
     }}
 
     /* Botón Activo: Naranja Institucional #E85D04 con texto blanco nítido */
@@ -424,7 +421,7 @@ def get_theme_css(is_dark: bool = True) -> str:
         -webkit-text-fill-color: #FFFFFF !important;
         border: none !important;
         border-color: transparent !important;
-        border-radius: 9999px !important;
+        border-radius: 10px !important;
         font-weight: 700 !important;
         font-size: 0.84rem !important;
         padding: 0.38rem 1rem !important;
@@ -456,48 +453,22 @@ def get_theme_css(is_dark: bool = True) -> str:
         width: fit-content !important;
         display: inline-flex !important;
     }}
+    html body .stApp [class*="theme_mode_selector"] [data-testid="stSegmentedControl"] {{
+        width: fit-content !important;
+        max-width: fit-content !important;
+    }}
 
     /* ── Cápsula de Modos de Flujo de Trabajo (Inspiración Libre / Cita Exacta / Autor) ── */
     html body .stApp [class*="modo_generador_selector"],
     html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]),
     html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiracion"]) {{
-        width: fit-content !important;
-        max-width: 100% !important;
+        width: 100% !important;
         margin: 0.35rem 0 0.85rem 0 !important;
-        border-radius: 9999px !important;
-        overflow: hidden !important;
-        padding: 3px !important;
-    }}
-
-    html body .stApp [class*="modo_generador_selector"] [data-baseweb="button-group"],
-    html body .stApp [class*="modo_generador_selector"] > div,
-    html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) [data-baseweb="button-group"],
-    html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) > div {{
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        scrollbar-width: none !important;
-        gap: 3px !important;
-        border-radius: 9999px !important;
-    }}
-
-    html body .stApp [class*="modo_generador_selector"] [data-baseweb="button-group"]::-webkit-scrollbar,
-    html body .stApp [class*="modo_generador_selector"] > div::-webkit-scrollbar {{
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
     }}
 
     html body .stApp [class*="modo_generador_selector"] button,
     html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) button {{
-        flex: 0 0 auto !important;
-        white-space: nowrap !important;
-        border-radius: 9999px !important;
-        padding: 0.42rem 1.05rem !important;
-        font-size: 0.84rem !important;
-        font-weight: 600 !important;
+        flex: 1 1 auto !important;
         min-height: 38px !important;
     }}
 
@@ -521,38 +492,17 @@ def get_theme_css(is_dark: bool = True) -> str:
     html body .stApp [data-testid="stTabs"] [data-baseweb="tab-border"],
     html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"],
     html body .stApp [data-testid="stTabs"] div[role="tablist"],
-    html body .stApp [data-testid="stTabs"] div,
     html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"] > div {{
         background-color: transparent !important;
         background: transparent !important;
         background-image: none !important;
         box-shadow: none !important;
     }}
-    /* Ocultar ABSOLUTAMENTE cualquier botón de scroll BaseWeb y sus envoltorios */
-    html body .stApp [data-testid="stTabs"] button:not([role="tab"]),
-    html body .stApp [data-testid="stTabs"] [role="button"]:not([role="tab"]),
-    html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"] button:not([role="tab"]),
-    html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"] ~ button,
-    html body .stApp [data-testid="stTabs"] button ~ [data-baseweb="tab-list"],
-    html body .stApp [data-testid="stTabs"] *[class*="ScrollButton"],
-    html body .stApp [data-testid="stTabs"] *[class*="scroll-button"],
-    html body .stApp [data-testid="stTabs"] *[aria-label*="scroll" i],
-    html body .stApp [data-testid="stTabs"] *[aria-label*="tab" i]:not([role="tab"]),
-    html body .stApp [data-testid="stTabs"] *[aria-label*="next" i],
-    html body .stApp [data-testid="stTabs"] *[aria-label*="previous" i] {{
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        width: 0 !important;
-        height: 0 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        border: none !important;
-        background: transparent !important;
-        background-color: transparent !important;
-        background-image: none !important;
-        box-shadow: none !important;
-        pointer-events: none !important;
+
+    /* Ocultar ABSOLUTAMENTE las gradientes blancas de scroll en tabs en celulares */
+    html body .stApp [data-testid="stTabs"] > div:first-child * {{
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
     }}
     html body .stApp [data-testid="stTabs"] > div:first-child::before,
     html body .stApp [data-testid="stTabs"] > div:first-child::after,
@@ -564,6 +514,12 @@ def get_theme_css(is_dark: bool = True) -> str:
         background: transparent !important;
         background-image: none !important;
     }}
+    html body .stApp [data-testid="stTabs"] button:not([role="tab"]),
+    html body .stApp [data-testid="stTabs"] div:has(> button:not([role="tab"])) {{
+        display: none !important;
+        pointer-events: none !important;
+    }}
+
     html body .stApp .stTabs [data-baseweb="tab"] {{
         font-family: 'Plus Jakarta Sans', sans-serif !important;
         font-weight: 600 !important;
@@ -590,9 +546,7 @@ def get_theme_css(is_dark: bool = True) -> str:
     }}
 
     /* ── Elevación y Estructura de Tarjetas (Bento Grid) ── */
-    html body .stApp [class*="st-key-card_"],
-    html body .stApp [data-testid="stVerticalBlockBorderWrapper"],
-    html body .stApp [data-testid="stColumn"] [data-testid="stLayoutWrapper"] > div[data-testid="stVerticalBlock"] {{
+    html body .stApp [class*="st-key-card_"] > [data-testid="stVerticalBlockBorderWrapper"] {{
         border-radius: 14px !important;
         box-shadow: {shadow_card} !important;
         border: 1.5px solid {border_card} !important;
@@ -600,15 +554,7 @@ def get_theme_css(is_dark: bool = True) -> str:
         padding: 1.35rem !important;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }}
-    html body .stApp [class*="st-key-card_"] > div[data-testid="stVerticalBlock"] {{
-        border: none !important;
-        padding: 0 !important;
-        background: transparent !important;
-        box-shadow: none !important;
-    }}
-    html body .stApp [class*="st-key-card_"]:hover,
-    html body .stApp [data-testid="stVerticalBlockBorderWrapper"]:hover,
-    html body .stApp [data-testid="stColumn"] [data-testid="stLayoutWrapper"] > div[data-testid="stVerticalBlock"]:hover {{
+    html body .stApp [class*="st-key-card_"] > [data-testid="stVerticalBlockBorderWrapper"]:hover {{
         border-color: {brand_tint_border} !important;
         box-shadow: {shadow_card_hover} !important;
     }}
