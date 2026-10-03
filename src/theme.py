@@ -271,6 +271,13 @@ def get_theme_css(is_dark: bool = True) -> str:
         color: #FFFFFF !important;
         font-size: 26px !important;
     }}
+    .brand-logo-icon img {{
+        max-width: 26px !important;
+        max-height: 34px !important;
+        object-fit: contain !important;
+        display: block !important;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+    }}
     .brand-logo-icon svg {{
         width: 26px !important;
         height: 26px !important;
@@ -930,6 +937,13 @@ def get_theme_css(is_dark: bool = True) -> str:
             font-size: 22px !important;
         }}
 
+        .brand-logo-icon img {{
+            max-width: 22px !important;
+            max-height: 28px !important;
+            object-fit: contain !important;
+            display: block !important;
+        }}
+
         .brand-logo-icon svg {{
             width: 22px !important;
             height: 22px !important;
@@ -1008,11 +1022,9 @@ def get_theme_css(is_dark: bool = True) -> str:
             border-radius: 8px 8px 0 0 !important;
         }}
 
-        /* Ocultar botones de flecha/chevron de scroll en pestañas móviles */
-        html body .stApp .stTabs button[data-baseweb="button"],
-        html body .stApp .stTabs [data-baseweb="tab-list"] ~ button,
-        html body .stApp .stTabs [data-baseweb="tab-list"] + button,
-        html body .stApp .stTabs button:not([role="tab"]) {{
+        /* Ocultar chevron/flechas de scroll ÚNICAMENTE en la cabecera de pestañas BaseWeb, NUNCA en el contenido */
+        html body .stApp .stTabs > div:first-child > button,
+        html body .stApp .stTabs [data-baseweb="tab-list"] ~ button[data-baseweb="button"]:not([role="tab"]) {{
             display: none !important;
             visibility: hidden !important;
             pointer-events: none !important;
@@ -1022,7 +1034,20 @@ def get_theme_css(is_dark: bool = True) -> str:
             margin: 0 !important;
             border: none !important;
             background: transparent !important;
-            background-color: transparent !important;
+        }}
+
+        /* Garantizar visibilidad, interactividad y tamaño táctil de TODOS los botones y píldoras en móvil */
+        html body .stApp .stTabs [data-baseweb="tab-panel"] button,
+        html body .stApp .stTabs [data-testid="stTabContent"] button,
+        html body .stApp .stTabs .stButton,
+        html body .stApp .stTabs .stButton button,
+        html body .stApp .stTabs [data-testid="stPill"] button,
+        html body .stApp .stTabs button[data-testid="stBaseButton-primary"],
+        html body .stApp .stTabs button[data-testid="stBaseButton-secondary"] {{
+            display: inline-flex !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            opacity: 1 !important;
         }}
 
         /* 4.4. Columnas y Botones de Acción en Móvil */

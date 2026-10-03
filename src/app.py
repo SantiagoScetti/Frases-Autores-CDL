@@ -133,7 +133,7 @@ def render_post_card_content(topic, tone, content, created_at):
 # --- Rutas de Assets y Branding Oficial ---
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 FAVICON_PATH = os.path.join(APP_DIR, "assets", "branding", "favicon.png")
-LOGO_TORCH_PATH = os.path.join(APP_DIR, "assets", "branding", "favicon_torch.png")
+LOGO_TORCH_PATH = os.path.join(APP_DIR, "assets", "branding", "torch_transparente.png")
 LOGO_HORIZONTAL_PATH = os.path.join(APP_DIR, "assets", "branding", "logo_horizontal_blanco.png")
 
 def get_base64_image(image_path: str) -> str:
@@ -406,7 +406,7 @@ col_head_brand, col_theme_switch = st.columns([3.8, 1.2], vertical_alignment="ce
 with col_head_brand:
     torch_b64 = get_base64_image(LOGO_TORCH_PATH)
     if torch_b64:
-        torch_icon_markup = f'<img src="data:image/png;base64,{torch_b64}" width="28" height="38" style="vertical-align: middle; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));" alt="Antorcha de la Libertad" />'
+        torch_icon_markup = f'<img src="data:image/png;base64,{torch_b64}" width="26" height="34" style="max-width: 26px; max-height: 34px; object-fit: contain; vertical-align: middle; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));" alt="Antorcha de la Libertad" />'
     else:
         torch_icon_markup = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C10.5 4.5 11 7 9.5 8.5C8.5 7.5 8.5 6 9 4.5C6.5 6.5 6 10 7.5 12.5C8 13.3 8.8 14 9.8 14.5C9.5 13.5 9.7 12.5 10.3 11.8C10.8 12.8 11.7 13.5 12.8 13.8C14.8 14.3 16.5 13 16.8 11C17.2 9 16 7 14.5 5.5C14.8 7 14 8 13.2 8.5C13.2 6.5 13 4 12 2Z" fill="#FFF275"/></svg>'
 
@@ -596,9 +596,27 @@ with tab_frases:
 
             # Regla de cita según el modo seleccionado por el usuario
             if tipo_cita == "Cita Textual Directa (del libro)":
-                regla_cita_formato = "1. Una cita impactante del autor: **DEBE ser una CITA TEXTUAL Y LITERAL copiada palabra por palabra del fragmento de referencia seleccionado, entrecomillada y formateada como blockquote de Markdown (usando el símbolo `>`). PROHIBIDO inventar o alterar palabras del autor original.** Si generás varias opciones, selecciona una frase literal distinta de cada fragmento."
+                regla_cita_formato = (
+                    "1. Una cita destacada del autor: **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>`) y entrecomillada. "
+                    "REGLA DE IDIOMA CRÍTICA: La cita DEBE ESTAR OBLIGATORIAMENTE EN ESPAÑOL. "
+                    "Si el fragmento de referencia original está en inglés u otro idioma (como en obras de Adam Smith, Locke, Mill, etc.), "
+                    "TRADÚCELO AL ESPAÑOL con máxima fidelidad conceptual, elegancia literaria y exactitud filosófica (NUNCA dejes la cita en inglés en el borrador). "
+                    "Si el texto original ya está en español, conserva la cita literal del autor.** "
+                    "Si generás varias opciones, selecciona una frase distinta de cada fragmento."
+                )
             else:
-                regla_cita_formato = "1. Una frase impactante del autor (máximo 2 oraciones). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>` al principio de la línea).** Puedes sintetizar o parafrasear fielmente basándote en los fragmentos."
+                regla_cita_formato = (
+                    "1. Una frase o reflexión impactante del autor (máximo 2 oraciones). "
+                    "**DEBE estar OBLIGATORIAMENTE EN ESPAÑOL y formateada como un blockquote de Markdown (usando el símbolo `>` al principio de la línea). "
+                    "Si el fragmento original está en inglés, tradúcelo y sintetízalo fielmente al español.**"
+                )
+
+            idioma_regla = (
+                "\n\nREGLA DE IDIOMA MANDATORIA:\n"
+                "Todo el contenido generado para la publicación (cita entrecomillada, firma, caption/explicación y aviso) "
+                "DEBE ESTAR 100% EN ESPAÑOL. Si el libro de base está en inglés, traduce la cita al español de forma impecable y natural. "
+                "Bajo ninguna circunstancia dejes texto en inglés en el borrador."
+            )
 
             # ── Prompts editoriales según tipo ──
             if tipo_frase == "Frase inspiradora":
@@ -617,7 +635,7 @@ Fragmentos extraídos del libro '{libro_real}' para usar de base:
 
 Tema: {tema_frase or 'libertad, ideas liberales'}
 
-REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS bajo cualquier circunstancia. Mantén un estilo sobrio, periodístico y formal.{instruccion_vars}"""
+REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS bajo cualquier circunstancia. Mantén un estilo sobrio, periodístico y formal.{idioma_regla}{instruccion_vars}"""
 
             elif tipo_frase == "Efeméride / Fecha histórica":
                 prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
@@ -634,7 +652,7 @@ Firma: — **{autor_real}**
 Fragmentos de referencia del autor en la biblioteca:
 {fragmentos_texto}
 
-REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Estilo editorial sobrio y clásico.{instruccion_vars}"""
+REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Estilo editorial sobrio y clásico.{idioma_regla}{instruccion_vars}"""
 
             else:  # Recomendación de libro
                 prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
@@ -642,15 +660,15 @@ REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Estilo editorial sobrio y clásico.{
 Tu tarea es crear una publicación CORTA para Instagram recomendando el libro '{libro_real}' de {autor_real}.
 
 FORMATO REQUERIDO:
-1. Frase gancho: una cita provocadora o reflexión central extraída del libro (1 oración). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>`).**
+1. Frase gancho: una cita provocadora o reflexión central extraída del libro (1 oración). **DEBE estar en ESPAÑOL y formateada como un blockquote de Markdown (usando el símbolo `>`). Si está en inglés, tradúcela al español.**
 2. La firma claramente separada: — **{autor_real}** (del libro *{libro_real}*)
-3. Breve reseña editorial (2-3 oraciones): tesis central y relevancia para el debate de ideas contemporáneo.
+3. Breve reseña editorial (2-3 oraciones): tesis central y relevancia para el debate de ideas contemporáneo en español.
 4. Disponibilidad: {dispo_texto}
 
 Fragmentos de referencia del libro:
 {fragmentos_texto}
 
-REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Tono riguroso, intelectual y directo. Sin hashtags.{instruccion_vars}"""
+REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Tono riguroso, intelectual y directo. Sin hashtags.{idioma_regla}{instruccion_vars}"""
 
             resultado = generar_respuesta(prompt)
             if resultado:
@@ -860,10 +878,11 @@ Instrucciones:
 1. El tono debe ser: {tono}.
 2. REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Mantén un estilo estrictamente editorial y sobrio.
 3. El posteo debe incluir la cita central formateada como un blockquote de Markdown (usando `>`), mencionando claramente al autor y al libro.
-4. MODERNIZA EL LENGUAJE: extrae la lección filosófica o económica y explícala con palabras modernas, claras y accesibles.
-5. Finaliza con un llamado sutil invitando a conocer más del autor en la biblioteca del Club o adquirir el ejemplar.
-6. Máximo 5-6 líneas de caption. Sin hashtags.
-7. Estilo acorde a una publicación académica o de divulgación de ideas.
+4. REGLA DE IDIOMA MANDATORIA: Todo el posteo, incluyendo la cita entrecomillada, DEBE ESTAR 100% EN ESPAÑOL. Si los fragmentos fuente están en inglés, traduce la cita al español con máxima fidelidad filosófica y elegancia.
+5. MODERNIZA EL LENGUAJE: extrae la lección filosófica o económica y explícala con palabras modernas, claras y accesibles.
+6. Finaliza con un llamado sutil invitando a conocer más del autor en la biblioteca del Club o adquirir el ejemplar.
+7. Máximo 5-6 líneas de caption. Sin hashtags.
+8. Estilo acorde a una publicación académica o de divulgación de ideas.
 """
                                     texto_generado = generar_respuesta(prompt_inicial)
                                     if texto_generado:
@@ -904,7 +923,7 @@ Instrucciones:
 Actúa como Editor de Contenido del Club de la Libertad.
 Anteriormente escribiste este posteo: "{st.session_state.posteo_generado}"
 El director pide este ajuste: "{instruccion_ajuste}"
-Reescribe el posteo aplicando este cambio. Mantené mención al autor y formato blockquote. Sin hashtags. PROHIBIDO EL USO DE EMOJIS.
+Reescribe el posteo aplicando este cambio. Mantené mención al autor y formato blockquote. Sin hashtags. Todo en español. PROHIBIDO EL USO DE EMOJIS.
 """
                                     nuevo_texto = generar_respuesta(prompt_ajuste)
                                     if nuevo_texto:
@@ -988,7 +1007,8 @@ Reescribe el posteo aplicando este cambio. Mantené mención al autor y formato 
                             st.markdown(f"> “{frag}”\n— {meta.get('author')}")
 
                             prompt = f"""Crea un post corto para Instagram en tono {tono_cita}. 
-Usa esta cita exacta obligatoriamente: "{frag}". 
+Usa esta cita como base obligatoria: "{frag}". 
+REGLA DE IDIOMA: La cita y todo el posteo DEBEN ESTAR OBLIGATORIAMENTE EN ESPAÑOL. Si el fragmento fuente está en inglés, tradúcelo con máxima fidelidad filosófica y estilo literario al español.
 Menciona a {meta.get('author')}. PROHIBIDO EL USO DE EMOJIS. Sin hashtags. Máximo 5 líneas de caption."""
                             res_texto = generar_respuesta(prompt)
                             if res_texto:
@@ -1037,8 +1057,8 @@ Menciona a {meta.get('author')}. PROHIBIDO EL USO DE EMOJIS. Sin hashtags. Máxi
                         if res['documents'] and len(res['documents'][0]):
                             frag = res['documents'][0][0]
                             prompt = f"""Crea un post inspirador para Instagram citando a {autor_exp}. 
-Usa esta idea o cita como base: "{frag}". Hazlo reflexivo. PROHIBIDO EL USO DE EMOJIS. Estilo editorial. 
-Sin hashtags. Máximo 5 líneas de caption."""
+Usa esta idea o cita como base: "{frag}". Si está en inglés, tradúcela con elegancia filosófica al español. Hazlo reflexivo. PROHIBIDO EL USO DE EMOJIS. Estilo editorial. 
+Sin hashtags. Máximo 5 líneas de caption. Todo el texto 100% en español."""
                             res_texto = generar_respuesta(prompt)
                             if res_texto:
                                 st.session_state.posteo_generado = clean_emojis(res_texto)
