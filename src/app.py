@@ -13,13 +13,16 @@ import subprocess
 import db
 import ingest
 import random
-import importlib
 import theme
-importlib.reload(theme)
 from theme import get_theme_css
 
-# Inicializar Base de Datos SQLite
-db.init_db()
+# Inicializar Base de Datos de forma eficiente (solo 1 vez por sesión/arranque)
+@st.cache_resource
+def setup_database():
+    db.init_db()
+    return True
+
+setup_database()
 
 # --- Funciones de Limpieza y Formato Editorial ---
 def clean_emojis(text: str) -> str:
@@ -250,14 +253,17 @@ AUTORES_TEMAS_CLAVE = {
     "Lysander Spooner": ["Anarquismo Individualista", "Contrato Social", "Ley Natural", "Vicios no son Delitos"]
 }
 
-# Cargar autores dinámicos dados de alta en la base de datos
-try:
-    db_dynamic_authors = db.get_all_authors_with_topics()
-    for dynamic_author, dynamic_topics in db_dynamic_authors.items():
-        if dynamic_author not in AUTORES_TEMAS_CLAVE or not AUTORES_TEMAS_CLAVE[dynamic_author]:
-            AUTORES_TEMAS_CLAVE[dynamic_author] = dynamic_topics
-except Exception:
-    pass
+# Cargar autores dinámicos dados de alta en la base de datos con caché
+@st.cache_data(ttl=600)
+def get_cached_author_topics():
+    try:
+        return db.get_all_authors_with_topics()
+    except Exception:
+        return {}
+
+for dynamic_author, dynamic_topics in get_cached_author_topics().items():
+    if dynamic_author not in AUTORES_TEMAS_CLAVE or not AUTORES_TEMAS_CLAVE[dynamic_author]:
+        AUTORES_TEMAS_CLAVE[dynamic_author] = dynamic_topics
 
 # --- Funciones Auxiliares ---
 def generar_respuesta(prompt_texto):

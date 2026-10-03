@@ -146,6 +146,60 @@ def get_theme_css(is_dark: bool = True) -> str:
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }}
 
+    /* ── Eliminación del Efecto Gris y Barra Superior Animada (Cero Pantalla Lavada) ── */
+    [data-stale="true"],
+    [data-testid="stElementContainer"][data-stale="true"],
+    .stApp[data-test-script-state="running"] [data-stale="true"],
+    .stApp[data-test-script-state="running"] [data-testid="stElementContainer"],
+    .stApp[data-test-script-state="running"] [data-testid="stVerticalBlock"],
+    .stApp[data-test-script-state="running"] [data-testid="stHorizontalBlock"] {{
+        opacity: 1 !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+        transition: none !important;
+    }}
+
+    /* Barra superior de progreso institucional (#E85D04 a #FF9E00) */
+    .stApp[data-test-script-state="running"]::before,
+    [data-testid="stApp"][data-test-script-state="running"]::before {{
+        content: "" !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: 3.5px !important;
+        z-index: 9999999 !important;
+        background: linear-gradient(
+            90deg,
+            #E85D04 0%,
+            #FF9E00 25%,
+            #FFB703 50%,
+            #FF9E00 75%,
+            #E85D04 100%
+        ) !important;
+        background-size: 200% 100% !important;
+        animation: cdlTopProgressBar 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+        box-shadow: 0 1px 12px rgba(232, 93, 4, 0.75), 0 0 5px rgba(255, 158, 0, 0.5) !important;
+        pointer-events: none !important;
+    }}
+
+    @keyframes cdlTopProgressBar {{
+        0% {{
+            background-position: 100% 0;
+        }}
+        100% {{
+            background-position: -100% 0;
+        }}
+    }}
+
+    [data-testid="stStatusWidget"] {{
+        background-color: transparent !important;
+    }}
+    [data-testid="stStatusWidget"] svg {{
+        fill: {brand_primary} !important;
+    }}
+
     .block-container {{
         max-width: 1440px;
         padding-left: 2.2rem;
@@ -233,40 +287,112 @@ def get_theme_css(is_dark: bool = True) -> str:
         font-weight: 500;
     }}
 
-    /* ── Segmented Controls (Selector de Tema & Flujos de Trabajo) ── */
-    html body .stApp [data-testid="stSegmentedControl"] {{
+    /* ── Segmented Controls / Button Group (Streamlit 1.40+ & 1.64+) ── */
+    html body .stApp [data-testid="stSegmentedControl"],
+    html body .stApp [data-testid="stButtonGroup"]:has(button[data-variant="segmented_control"]),
+    html body .stApp .stButtonGroup:has(button[data-variant="segmented_control"]),
+    html body .stApp [class*="theme_mode_selector"] [data-testid="stButtonGroup"],
+    html body .stApp [class*="theme_mode_selector"] .stButtonGroup {{
         background-color: {seg_bg} !important;
         border: 1.5px solid {seg_border} !important;
         border-radius: 9999px !important;
         padding: 3px !important;
+        box-shadow: none !important;
+        gap: 0 !important;
     }}
-    html body .stApp [data-testid="stSegmentedControl"] [data-baseweb="button-group"] {{
+
+    html body .stApp [data-testid="stSegmentedControl"] [data-baseweb="button-group"],
+    html body .stApp [data-testid="stButtonGroup"] > div,
+    html body .stApp .stButtonGroup > div {{
+        background: transparent !important;
         background-color: transparent !important;
+        border: none !important;
+        border-radius: 9999px !important;
         gap: 4px !important;
+        padding: 0 !important;
     }}
-    html body .stApp [data-testid="stSegmentedControl"] button {{
+
+    /* Botón Inactivo: fondo transparente, sin bordes ni sombras de stBaseButton-secondary */
+    html body .stApp [data-testid="stSegmentedControl"] button:not([aria-checked="true"]):not([data-selected]),
+    html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]),
+    html body .stApp .stButtonGroup button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]),
+    html body .stApp button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]),
+    html body .stApp button[data-variant="segmented_control"][kind="segmented_control"],
+    html body .stApp [class*="theme_mode_selector"] button:not([data-selected]):not([aria-checked="true"]) {{
         background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
+        color: {seg_unselected_text} !important;
+        -webkit-text-fill-color: {seg_unselected_text} !important;
         border-radius: 9999px !important;
         font-size: 0.84rem !important;
         font-weight: 600 !important;
-        color: {seg_unselected_text} !important;
-        border: none !important;
         padding: 0.4rem 1.05rem !important;
+        margin: 0 !important;
         transition: all 0.15s ease !important;
+        cursor: pointer !important;
     }}
-    html body .stApp [data-testid="stSegmentedControl"] button:hover {{
-        color: {text_primary} !important;
+
+    html body .stApp [data-testid="stSegmentedControl"] button:not([aria-checked="true"]):not([data-selected]) *,
+    html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]) *,
+    html body .stApp .stButtonGroup button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]) *,
+    html body .stApp button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]) * {{
+        color: {seg_unselected_text} !important;
+        -webkit-text-fill-color: {seg_unselected_text} !important;
+        fill: {seg_unselected_text} !important;
+    }}
+
+    html body .stApp [data-testid="stSegmentedControl"] button:not([aria-checked="true"]):not([data-selected]):hover,
+    html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]):hover,
+    html body .stApp .stButtonGroup button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]):hover,
+    html body .stApp button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]):hover {{
         background-color: {brand_tint} !important;
+        color: {text_primary} !important;
+        -webkit-text-fill-color: {text_primary} !important;
+        border: none !important;
     }}
-    html body .stApp [data-testid="stSegmentedControl"] button[aria-checked="true"] {{
-        background-color: {brand_primary} !important;
+
+    /* Botón Activo: Naranja Institucional #E85D04 con texto blanco nítido */
+    html body .stApp [data-testid="stSegmentedControl"] button[aria-checked="true"],
+    html body .stApp [data-testid="stSegmentedControl"] button[data-selected],
+    html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"][data-selected],
+    html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"][aria-checked="true"],
+    html body .stApp .stButtonGroup button[data-variant="segmented_control"][data-selected],
+    html body .stApp .stButtonGroup button[data-variant="segmented_control"][aria-checked="true"],
+    html body .stApp button[data-variant="segmented_control"][data-selected],
+    html body .stApp button[data-variant="segmented_control"][aria-checked="true"],
+    html body .stApp button[data-variant="segmented_control"][kind="segmented_controlActive"],
+    html body .stApp [class*="theme_mode_selector"] button[data-selected],
+    html body .stApp [class*="theme_mode_selector"] button[aria-checked="true"] {{
+        background-color: #E85D04 !important;
+        background: #E85D04 !important;
         color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+        border: none !important;
+        border-color: transparent !important;
+        border-radius: 9999px !important;
         font-weight: 700 !important;
-        box-shadow: 0 2px 6px rgba(232, 93, 4, 0.35) !important;
+        font-size: 0.84rem !important;
+        padding: 0.4rem 1.05rem !important;
+        box-shadow: 0 2px 6px rgba(232, 93, 4, 0.4) !important;
+        transition: all 0.15s ease !important;
+        margin: 0 !important;
     }}
-    html body .stApp [data-testid="stSegmentedControl"] button[aria-checked="true"] * {{
+
+    html body .stApp [data-testid="stSegmentedControl"] button[aria-checked="true"] *,
+    html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"][data-selected] *,
+    html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"][aria-checked="true"] *,
+    html body .stApp .stButtonGroup button[data-variant="segmented_control"][data-selected] *,
+    html body .stApp button[data-variant="segmented_control"][data-selected] *,
+    html body .stApp button[data-variant="segmented_control"][aria-checked="true"] *,
+    html body .stApp button[data-variant="segmented_control"][kind="segmented_controlActive"] * {{
         color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
         fill: #FFFFFF !important;
+        font-weight: 700 !important;
     }}
 
     /* ── Pestañas de Navegación ── */
@@ -721,6 +847,173 @@ def get_theme_css(is_dark: bool = True) -> str:
     hr, [data-testid="stDivider"] {{
         border-color: {border_card} !important;
         opacity: 0.7;
+    }}
+
+    /* ═══════════════════════════════════════════════════════════════════════════════
+       4. REGLAS RESPONSIVAS COMPLETAS PARA MÓVILES (@media (max-width: 768px))
+       ═══════════════════════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {{
+        /* 4.1. Reducción de márgenes laterales para maximizar pantalla */
+        .block-container {{
+            padding-left: 0.85rem !important;
+            padding-right: 0.85rem !important;
+            padding-top: 0.85rem !important;
+            padding-bottom: 2.5rem !important;
+            max-width: 100% !important;
+        }}
+
+        /* 4.2. Header Institucional y Selector de Tema en Móvil */
+        html body .stApp [data-testid="stHorizontalBlock"]:has(.brand-header-box) {{
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 0.65rem !important;
+            margin-bottom: 0.5rem !important;
+        }}
+
+        html body .stApp [data-testid="stHorizontalBlock"]:has(.brand-header-box) > [data-testid="stColumn"] {{
+            width: 100% !important;
+            min-width: 100% !important;
+            flex: 1 1 100% !important;
+        }}
+
+        .brand-header-box {{
+            padding: 0.85rem 1rem !important;
+            gap: 12px !important;
+            border-radius: 12px !important;
+            flex-wrap: wrap !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }}
+
+        .brand-logo-icon {{
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 10px !important;
+            flex-shrink: 0 !important;
+        }}
+
+        .brand-logo-icon .material-symbols-rounded {{
+            font-size: 22px !important;
+        }}
+
+        .brand-title-group {{
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+        }}
+
+        .brand-title-group h1 {{
+            font-size: 1.18rem !important;
+            line-height: 1.22 !important;
+            word-break: break-word !important;
+        }}
+
+        .brand-title-group p {{
+            font-size: 0.76rem !important;
+            line-height: 1.3 !important;
+            margin-top: 0.15rem !important;
+        }}
+
+        /* Selector de tema en móvil: 100% ancho con split 50/50 táctil */
+        html body .stApp [class*="theme_mode_selector"],
+        html body .stApp [data-testid="stSegmentedControl"],
+        html body .stApp [data-testid="stButtonGroup"] {{
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }}
+
+        html body .stApp [data-testid="stSegmentedControl"] [data-baseweb="button-group"],
+        html body .stApp [data-testid="stButtonGroup"] > div,
+        html body .stApp .stButtonGroup > div {{
+            width: 100% !important;
+            display: flex !important;
+        }}
+
+        html body .stApp [data-testid="stSegmentedControl"] button,
+        html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"] {{
+            flex: 1 1 50% !important;
+            justify-content: center !important;
+            padding: 0.45rem 0.6rem !important;
+            font-size: 0.8rem !important;
+            min-height: 40px !important;
+        }}
+
+        /* 4.3. Pestañas de Navegación con Scroll Horizontal Táctil */
+        html body .stApp .stTabs [data-baseweb="tab-list"] {{
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            white-space: nowrap !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+            gap: 6px !important;
+            padding-bottom: 4px !important;
+            padding-left: 2px !important;
+            padding-right: 2px !important;
+            border-bottom: 1.5px solid {border_card} !important;
+        }}
+
+        html body .stApp .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar {{
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }}
+
+        html body .stApp .stTabs [data-baseweb="tab"] {{
+            font-size: 0.83rem !important;
+            padding: 0.55rem 0.85rem !important;
+            flex-shrink: 0 !important;
+            white-space: nowrap !important;
+            border-radius: 8px 8px 0 0 !important;
+        }}
+
+        /* 4.4. Columnas y Botones de Acción en Móvil */
+        html body .stApp [data-testid="stHorizontalBlock"] {{
+            flex-direction: column !important;
+            flex-wrap: wrap !important;
+            gap: 0.75rem !important;
+        }}
+
+        html body .stApp [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {{
+            width: 100% !important;
+            min-width: 100% !important;
+            flex: 1 1 100% !important;
+        }}
+
+        /* Botones táctiles cómodos a ancho completo */
+        html body .stApp .stButton button {{
+            width: 100% !important;
+            min-height: 44px !important;
+            padding: 0.65rem 1rem !important;
+            font-size: 0.92rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+        }}
+
+        /* Tarjetas con paddings optimizados */
+        html body .stApp [class*="st-key-card_"],
+        html body .stApp [data-testid="stVerticalBlockBorderWrapper"],
+        html body .stApp [data-testid="stColumn"] [data-testid="stLayoutWrapper"] > div[data-testid="stVerticalBlock"] {{
+            padding: 1rem 0.85rem !important;
+            border-radius: 12px !important;
+        }}
+
+        /* Citas editoriales compactas en pantalla pequeña */
+        blockquote, .editorial-quote {{
+            padding: 0.85rem 1rem !important;
+            font-size: 1.02rem !important;
+            margin: 0.6rem 0 !important;
+            line-height: 1.55 !important;
+        }}
+
+        .card-meta-header {{
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+        }}
     }}
 </style>
 """
