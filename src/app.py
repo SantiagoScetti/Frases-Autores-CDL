@@ -1,13 +1,14 @@
 import os
 import re
 import html
+import base64
 import streamlit as st
 import chromadb
 from chromadb.utils import embedding_functions
 from google import genai
 from groq import Groq
 from dotenv import load_dotenv
-from image_generator import generate_social_media_image
+from image_generator import generate_social_media_image, slugify
 import shutil
 import subprocess
 import db
@@ -105,8 +106,61 @@ def render_post_card_content(topic, tone, content, created_at):
         preview = clean_emojis(content)[:160]
         st.markdown(f'<div class="editorial-quote">“{html.escape(preview)}...”</div>', unsafe_allow_html=True)
 
-# --- Configuración de la Página ---
-st.set_page_config(page_title="Club de la Libertad - Sistema de Frases", layout="wide")
+# --- Rutas de Assets y Branding Oficial ---
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+FAVICON_PATH = os.path.join(APP_DIR, "assets", "branding", "favicon.png")
+LOGO_TORCH_PATH = os.path.join(APP_DIR, "assets", "branding", "favicon_torch.png")
+LOGO_HORIZONTAL_PATH = os.path.join(APP_DIR, "assets", "branding", "logo_horizontal_blanco.png")
+
+def get_base64_image(image_path: str) -> str:
+    """Retorna la imagen codificada en base64 para incrustar en HTML sin romper rutas."""
+    if os.path.exists(image_path):
+        try:
+            with open(image_path, "rb") as f:
+                return base64.b64encode(f.read()).decode()
+        except Exception:
+            return ""
+    return ""
+
+# Diccionario de conceptos conceptuales nucleares para búsquedas sin tema
+CONCEPTOS_AUTOR_DEFAULT = {
+    "Ludwig von Mises": "praxeología acción humana orden de mercado cálculo económico cooperación social precios libertad",
+    "Murray Rothbard": "ética de la libertad anarcocapitalismo ley natural monopolio y competencia orden de mercado",
+    "Frédéric Bastiat": "lo que se ve y lo que no se ve la ley expoliación legal libertad de comercio armonías económicas",
+    "Adam Smith": "mano invisible división del trabajo simpatía moral riqueza de las naciones libre comercio",
+    "Friedrich Hayek": "conocimiento disperso orden espontáneo camino de servidumbre estado de derecho fatal arrogancia",
+    "Juan Bautista Alberdi": "bases y puntos de partida constitución libertad económica comercio inmigración orden republicano",
+    "Domingo Faustino Sarmiento": "educación popular civilización y barbarie libertad de imprenta progreso instituciones",
+    "John Locke": "derecho natural propiedad vida libertad gobierno limitado consentimiento de los gobernados",
+    "Ayn Rand": "objetivismo individualismo razón interés propio racional capitalismo de libre mercado",
+    "Robert Wenzel": "libertad individual mercado dinero y crédito crítica a la intervención estatal",
+}
+
+def es_chunk_bibliografico(texto: str) -> bool:
+    """Detecta si un fragmento es de notas al pie, prólogo editorial, bibliografía o catálogo."""
+    patrones_biblio = [
+        r'edici[oó]n\s+revisada',
+        r'traducci[oó]n\s+española',
+        r'Classics\s+on\s+Tape',
+        r'Henry\s+Regnery',
+        r'Liberty\s+Fund',
+        r'ISBN\s*[:\d\-]+',
+        r'pp?\.\s*\d+[-–]\d+',
+        r'p[aá]g(?:ina)?s?\.\s*\d+.*p[aá]g',
+        r'Library\s+of\s+Congress',
+        r'impreso\s+en\s+españa',
+        r'derechos\s+reservados',
+        r'dep[oó]sito\s+legal'
+    ]
+    matches = sum(1 for p in patrones_biblio if re.search(p, texto, re.IGNORECASE))
+    return matches >= 2 or (len(texto) < 180 and matches >= 1)
+
+# --- Configuración de la Página con Favicon Oficial ---
+st.set_page_config(
+    page_title="Club de la Libertad - Sistema de Frases",
+    page_icon=FAVICON_PATH if os.path.exists(FAVICON_PATH) else ":material/local_fire_department:",
+    layout="wide"
+)
 
 # --- Gestión Dinámica de Tema (Oscuro / Claro) ---
 if "theme_mode" not in st.session_state:
@@ -326,17 +380,16 @@ if 'citas_crudas_meta' not in st.session_state:
 col_head_brand, col_theme_switch = st.columns([3.8, 1.2], vertical_alignment="center")
 
 with col_head_brand:
-    st.markdown("""
+    torch_b64 = get_base64_image(LOGO_TORCH_PATH)
+    if torch_b64:
+        torch_icon_markup = f'<img src="data:image/png;base64,{torch_b64}" width="28" height="38" style="vertical-align: middle; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));" alt="Antorcha de la Libertad" />'
+    else:
+        torch_icon_markup = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C10.5 4.5 11 7 9.5 8.5C8.5 7.5 8.5 6 9 4.5C6.5 6.5 6 10 7.5 12.5C8 13.3 8.8 14 9.8 14.5C9.5 13.5 9.7 12.5 10.3 11.8C10.8 12.8 11.7 13.5 12.8 13.8C14.8 14.3 16.5 13 16.8 11C17.2 9 16 7 14.5 5.5C14.8 7 14 8 13.2 8.5C13.2 6.5 13 4 12 2Z" fill="#FFF275"/></svg>'
+
+    st.markdown(f"""
     <div class="brand-header-box">
-        <div class="brand-logo-icon" title="Club de la Libertad — Antorcha de la Libertad">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C10.5 4.5 11 7 9.5 8.5C8.5 7.5 8.5 6 9 4.5C6.5 6.5 6 10 7.5 12.5C8 13.3 8.8 14 9.8 14.5C9.5 13.5 9.7 12.5 10.3 11.8C10.8 12.8 11.7 13.5 12.8 13.8C14.8 14.3 16.5 13 16.8 11C17.2 9 16 7 14.5 5.5C14.8 7 14 8 13.2 8.5C13.2 6.5 13 4 12 2Z" fill="#FFF275"/>
-                <path d="M12 5.5C11.2 7 11.5 8.5 10.8 9.5C10.2 8.8 10.2 7.8 10.5 7C9 8.2 8.8 10.5 9.8 12C10.1 12.5 10.6 13 11.2 13.2C11 12.6 11.2 12 11.5 11.5C11.8 12.2 12.5 12.7 13.2 12.8C14.5 13.1 15.5 12.2 15.7 11C16 9.8 15.2 8.5 14.2 7.5C14.5 8.5 14 9.2 13.5 9.5C13.5 8.2 13.2 6.8 12 5.5Z" fill="#FFFFFF"/>
-                <path d="M7 14H17L15.6 17.2H8.4L7 14Z" fill="#FFFFFF"/>
-                <rect x="8" y="17.8" width="8" height="1.4" rx="0.7" fill="#FFF275"/>
-                <path d="M9.5 19.8L10.3 26H13.7L14.5 19.8H9.5Z" fill="#FFFFFF"/>
-                <rect x="10" y="26.3" width="4" height="1.4" rx="0.7" fill="#FFF275"/>
-            </svg>
+        <div class="brand-logo-icon" title="Fundación Club de la Libertad — Corrientes, Argentina">
+            {torch_icon_markup}
         </div>
         <div class="brand-title-group">
             <h1>Club de la Libertad</h1>
@@ -419,12 +472,18 @@ with tab_frases:
             if tipo_frase == "Efeméride / Fecha histórica":
                 fecha_efemeride = st.text_input(
                     ":material/event: ¿Qué efeméride?",
-                    placeholder="Ej: Nacimiento de Bastiat, 30 de junio",
+                    placeholder="Ej: 29 de septiembre de 1881 - Natalicio",
                     key="efem_input"
                 )
             else:
                 fecha_efemeride = None
         with col_opt2:
+            tipo_cita = st.radio(
+                ":material/format_quote: Modo de Cita",
+                ["Cita Textual Directa (del libro)", "Reflexión Editorial Sintetizada"],
+                key="frase_tipo_cita",
+                help="Cita Textual extrae la frase idéntica del libro entrecomillada; Reflexión sintetiza la lección filosófica."
+            )
             n_variaciones = st.slider(":material/format_list_numbered: Cantidad de opciones", 1, 4, 1, key="frase_n_var")
             incluir_cta = st.checkbox(":material/campaign: Incluir placa CTA (Biblioteca)", value=False, key="frase_incluir_cta")
 
@@ -433,7 +492,8 @@ with tab_frases:
     if btn_extraer:
         with st.spinner("Extrayendo citas del libro..."):
             st.session_state.frase_rapida_generada = None
-            search_query = tema_frase or "importante fundamental esencial principal"
+            default_core = CONCEPTOS_AUTOR_DEFAULT.get(autor_frase, "principios de la libertad individuo cooperacion social mercado")
+            search_query = tema_frase or default_core
             where_c = None
             if libro_frase != "Todos":
                 where_c = {"title": libro_frase}
@@ -441,25 +501,34 @@ with tab_frases:
                 aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
                 where_c = {"author": {"$in": aliases}}
             
-            kwargs = {"query_texts": [search_query], "n_results": 20}
+            kwargs = {"query_texts": [search_query], "n_results": 25}
             if where_c: kwargs["where"] = where_c
             
             res = collection.query(**kwargs)
             if res['documents'] and len(res['documents'][0]):
                 docs = res['documents'][0]
                 metas = res['metadatas'][0]
-                indices = list(range(len(docs)))
-                random.shuffle(indices)
-                indices = indices[:4]
-                st.session_state.citas_crudas = [docs[i] for i in indices]
-                st.session_state.citas_crudas_meta = [metas[i] for i in indices]
+                
+                # Filtrar fragmentos bibliográficos o de prólogo
+                limpios = [(docs[i], metas[i] if i < len(metas) else {}) for i in range(len(docs)) if not es_chunk_bibliografico(docs[i])]
+                if not limpios:
+                    limpios = [(docs[i], metas[i] if i < len(metas) else {}) for i in range(len(docs))]
+                    
+                random.shuffle(limpios)
+                limpios = limpios[:4]
+                st.session_state.citas_crudas = [c[0] for c in limpios]
+                st.session_state.citas_crudas_meta = [c[1] for c in limpios]
             else:
                 st.warning("No se encontraron citas con esos parámetros.")
 
     if btn_generar:
         with st.spinner("Buscando en la biblioteca y generando redacción editorial..."):
             st.session_state.citas_crudas = None
-            search_query = fecha_efemeride or tema_frase or (autor_frase if autor_frase != "Todos" else "libertad")
+            
+            # Enriquecimiento semántico inteligente para evitar caer en índices o prólogos
+            default_core = CONCEPTOS_AUTOR_DEFAULT.get(autor_frase, "principios de la libertad individuo cooperacion social mercado")
+            search_query = fecha_efemeride or tema_frase or default_core
+            
             where_c = None
             if libro_frase != "Todos":
                 where_c = {"title": libro_frase}
@@ -467,7 +536,7 @@ with tab_frases:
                 aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
                 where_c = {"author": {"$in": aliases}}
 
-            kwargs = {"query_texts": [search_query], "n_results": max(10, n_variaciones * 3)}
+            kwargs = {"query_texts": [search_query], "n_results": max(15, n_variaciones * 5)}
             if where_c:
                 kwargs["where"] = where_c
 
@@ -478,13 +547,21 @@ with tab_frases:
             if results['documents'] and len(results['documents'][0]):
                 docs = results['documents'][0]
                 metas = results['metadatas'][0]
-                indices = list(range(len(docs)))
-                random.shuffle(indices)
-                indices = indices[:n_variaciones]
                 
-                for i in indices:
-                    fragmentos_seleccionados.append(docs[i])
-                meta_base = metas[indices[0]] if metas else {}
+                # Filtrar fragmentos puramente bibliográficos o de traductores
+                candidatos = []
+                for idx, doc_text in enumerate(docs):
+                    if not es_chunk_bibliografico(doc_text):
+                        candidatos.append((doc_text, metas[idx] if idx < len(metas) else {}))
+                
+                # Si todos fueran descartados, fallback a docs originales
+                if not candidatos:
+                    candidatos = [(docs[i], metas[i] if i < len(metas) else {}) for i in range(len(docs))]
+
+                random.shuffle(candidatos)
+                seleccionados = candidatos[:n_variaciones]
+                fragmentos_seleccionados = [c[0] for c in seleccionados]
+                meta_base = seleccionados[0][1] if seleccionados else {}
             
             fragmentos_texto = "\n\n---\n\n".join([f"Fragmento de Referencia {i+1}:\n\"{f}\"" for i, f in enumerate(fragmentos_seleccionados)])
 
@@ -493,6 +570,12 @@ with tab_frases:
 
             instruccion_vars = f"\n\nATENCIÓN: Genera {n_variaciones} opciones DISTINTAS para este posteo. Numéralas como 'Opción 1', 'Opción 2', etc. y sepáralas con una línea divisoria (---)." if n_variaciones > 1 else ""
 
+            # Regla de cita según el modo seleccionado por el usuario
+            if tipo_cita == "Cita Textual Directa (del libro)":
+                regla_cita_formato = "1. Una cita impactante del autor: **DEBE ser una CITA TEXTUAL Y LITERAL copiada palabra por palabra del fragmento de referencia seleccionado, entrecomillada y formateada como blockquote de Markdown (usando el símbolo `>`). PROHIBIDO inventar o alterar palabras del autor original.** Si generás varias opciones, selecciona una frase literal distinta de cada fragmento."
+            else:
+                regla_cita_formato = "1. Una frase impactante del autor (máximo 2 oraciones). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>` al principio de la línea).** Puedes sintetizar o parafrasear fielmente basándote en los fragmentos."
+
             # ── Prompts editoriales según tipo ──
             if tipo_frase == "Frase inspiradora":
                 prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
@@ -500,12 +583,12 @@ with tab_frases:
 Tu tarea es crear una publicación CORTA para Instagram Stories o feed, al estilo de las cuentas de alto nivel que publican citas de pensadores clásicos liberales.
 
 FORMATO REQUERIDO (estricto):
-1. Una frase impactante del autor (máximo 2 oraciones). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>` al principio de la línea).** Si no encontrás una cita textual perfecta, parafraseá fielmente basándote en los fragmentos. Si generás varias opciones, basate en un fragmento distinto para cada una.
+{regla_cita_formato}
 2. La firma claramente separada: — **{autor_real}**
 3. Caption para Instagram: máximo 2-3 líneas explicando brevemente la lección filosófica o económica en lenguaje moderno, accesible y riguroso. Sin hashtags.
 4. Aviso: {dispo_texto}
 
-Fragmentos extraídos del libro '{libro_real}' para usar de inspiración:
+Fragmentos extraídos del libro '{libro_real}' para usar de base:
 {fragmentos_texto}
 
 Tema: {tema_frase or 'libertad, ideas liberales'}
@@ -519,11 +602,12 @@ Tu tarea es crear una publicación para Instagram sobre la efeméride: "{fecha_e
 
 FORMATO REQUERIDO (estricto, estilo Efemérides Libertarias del Club):
 1. Encabezado: la fecha y el nombre del personaje o evento histórico.
-2. Una frase icónica del personaje (si aplica). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>`).** Con la firma: — **{autor_real}**
-3. Caption para Instagram: 3-5 líneas máximo. Explica quién fue esta persona y por qué es importante para las ideas de la libertad. Tono respetuoso, formal y directo. Sin hashtags.
-4. Aviso: {dispo_texto}
+{regla_cita_formato}
+Firma: — **{autor_real}**
+2. Caption para Instagram: 3-5 líneas máximo. Explica quién fue esta persona y por qué es importante para las ideas de la libertad. Tono respetuoso, formal y directo. Sin hashtags.
+3. Aviso: {dispo_texto}
 
-Si hay material del autor en la biblioteca, usá estos fragmentos como referencia (si generás varias opciones, intentá variar el fragmento que citás):
+Fragmentos de referencia del autor en la biblioteca:
 {fragmentos_texto}
 
 REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Estilo editorial sobrio y clásico.{instruccion_vars}"""
@@ -539,7 +623,7 @@ FORMATO REQUERIDO:
 3. Breve reseña editorial (2-3 oraciones): tesis central y relevancia para el debate de ideas contemporáneo.
 4. Disponibilidad: {dispo_texto}
 
-Fragmentos de referencia del libro (para inspirar el gancho o la descripción):
+Fragmentos de referencia del libro:
 {fragmentos_texto}
 
 REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Tono riguroso, intelectual y directo. Sin hashtags.{instruccion_vars}"""
@@ -551,6 +635,15 @@ REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Tono riguroso, intelectual y directo
                     resultado += cta_text
                 st.session_state.frase_rapida_generada = clean_emojis(resultado)
                 st.session_state.frase_rapida_original = fragmentos_texto
+                
+                # Auto-completar los datos para la placa gráfica sin fricción
+                q_parsed, a_parsed = extract_quote_preview(resultado)
+                if q_parsed:
+                    st.session_state.placa_frase_txt = q_parsed
+                if a_parsed:
+                    st.session_state.placa_frase_autor = a_parsed
+                else:
+                    st.session_state.placa_frase_autor = autor_real
 
     # ── Mostrar resultado IA ──
     if st.session_state.frase_rapida_generada:
@@ -584,21 +677,69 @@ REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Tono riguroso, intelectual y directo
                 st.session_state.frase_rapida_generada = None
                 st.rerun()
 
-        # Sección de placa visual
+        # Sección de placa visual (Canva 1080x1920 y Feed)
         st.divider()
-        st.markdown("### :material/image: Placa Gráfica para Redes")
+        st.markdown("### :material/image: Placa Gráfica para Redes (Estilo Canva)")
         with st.container(key="card_placa_f", border=True):
-            col_placa_frase, col_placa_autor = st.columns(2)
+            col_placa_frase, col_placa_autor = st.columns([3, 2])
             with col_placa_frase:
-                frase_placa = st.text_area(":material/format_quote: Frase para la placa", value="Pega aquí la frase corta...", key="placa_frase_txt")
+                frase_placa = st.text_area(
+                    ":material/format_quote: Frase para la placa",
+                    value=st.session_state.get('placa_frase_txt', ''),
+                    placeholder="Pega aquí la frase corta o selecciónala del borrador...",
+                    key="placa_frase_txt"
+                )
             with col_placa_autor:
-                autor_placa = st.text_input(":material/badge: Firma / Autor", value=autor_frase if autor_frase != "Todos" else "Autor", key="placa_frase_autor")
+                autor_placa = st.text_input(
+                    ":material/badge: Firma / Autor",
+                    value=st.session_state.get('placa_frase_autor', autor_frase if autor_frase != "Todos" else "Ludwig von Mises"),
+                    key="placa_frase_autor"
+                )
+                header_default = fecha_efemeride or ("EFEMÉRIDES LIBERTARIAS" if tipo_frase == "Efeméride / Fecha histórica" else "PENSADORES DE LA LIBERTAD")
+                header_placa = st.text_input(
+                    ":material/event: Encabezado / Fecha histórica (opcional)",
+                    value=header_default,
+                    key="placa_header_txt"
+                )
 
-            if st.button("Generar Imagen", icon=":material/palette:", type="primary", key="gen_placa_frase"):
-                with st.spinner("Creando placa gráfica..."):
-                    img_bytes = generate_social_media_image(frase_placa, autor_placa)
-                    st.image(img_bytes, caption="Placa lista para publicar")
-                    st.download_button(label="Descargar Placa", icon=":material/download:", data=img_bytes, file_name="placa_club_libertad.png", mime="image/png", key="dl_placa_frase")
+            col_fmt, col_color = st.columns(2)
+            with col_fmt:
+                formato_placa = st.radio(
+                    "Formato de Imagen",
+                    ["Historia de Instagram (1080x1920)", "Posteo Cuadrado (1080x1080)"],
+                    horizontal=True,
+                    key="placa_fmt_choice"
+                )
+            with col_color:
+                color_placa = st.selectbox(
+                    ":material/palette: Paleta de Color de Fondo",
+                    ["Azul Institucional (Navy)", "Naranja Institucional", "Borgoña Clásico", "Verde Botella", "Negro Azabache", "Crema Marfil (Luz)", "Personalizado (Color Picker)"],
+                    key="placa_color_choice"
+                )
+                custom_hex_val = None
+                if "Personalizado" in color_placa:
+                    custom_hex_val = st.color_picker("Elige el color exacto", value="#0B132B", key="placa_custom_picker")
+
+            if st.button("Generar Placa Gráfica", icon=":material/palette:", type="primary", key="gen_placa_frase"):
+                with st.spinner("Diseñando placa gráfica editorial..."):
+                    fmt = "story" if "Historia" in formato_placa else "square"
+                    img_bytes = generate_social_media_image(
+                        quote_text=frase_placa or "La libertad es el valor supremo.",
+                        author_text=autor_placa or "Club de la Libertad",
+                        header_category=header_placa,
+                        color_palette=color_placa,
+                        custom_hex=custom_hex_val,
+                        format_type=fmt
+                    )
+                    st.image(img_bytes, caption=f"Placa lista para publicar ({'1080x1920 Historia' if fmt == 'story' else '1080x1080 Cuadrada'})")
+                    st.download_button(
+                        label=f"Descargar Imagen ({'Historia 1080x1920' if fmt == 'story' else 'Feed 1080x1080'})",
+                        icon=":material/download:",
+                        data=img_bytes,
+                        file_name=f"placa_{slugify(autor_placa)}_{fmt}.png",
+                        mime="image/png",
+                        key="dl_placa_frase"
+                    )
 
     # ── Mostrar citas directas (Sin IA) ──
     if st.session_state.citas_crudas:
@@ -747,16 +888,57 @@ Reescribe el posteo aplicando este cambio. Mantené mención al autor y formato 
                                         st.rerun()
 
                 with col_placa:
-                    st.markdown("### :material/image: Placa Gráfica para Redes")
+                    st.markdown("### :material/image: Placa Gráfica para Redes (Estilo Canva)")
                     with st.container(key="card_placa_g", border=True):
-                        frase_placa = st.text_area(":material/format_quote: Frase para la placa", value="Pega aquí la mejor frase corta del posteo...")
-                        autor_placa = st.text_input(":material/badge: Firma / Autor", value="Autor - Libro")
+                        frase_placa = st.text_area(
+                            ":material/format_quote: Frase para la placa",
+                            value=st.session_state.get('placa_frase_txt', ''),
+                            placeholder="Pega aquí la mejor frase corta del posteo...",
+                            key="placa_g_txt"
+                        )
+                        autor_placa = st.text_input(
+                            ":material/badge: Firma / Autor",
+                            value=st.session_state.get('placa_frase_autor', autor_seleccionado if autor_seleccionado != "Todos" else "Ludwig von Mises"),
+                            key="placa_g_autor"
+                        )
+                        col_fmt_g, col_color_g = st.columns(2)
+                        with col_fmt_g:
+                            fmt_choice_g = st.radio(
+                                "Formato",
+                                ["Historia (1080x1920)", "Cuadrada (1080x1080)"],
+                                horizontal=True,
+                                key="fmt_choice_g"
+                            )
+                        with col_color_g:
+                            color_choice_g = st.selectbox(
+                                "Paleta de Color",
+                                ["Azul Institucional (Navy)", "Naranja Institucional", "Borgoña Clásico", "Verde Botella", "Negro Azabache", "Crema Marfil (Luz)", "Personalizado (Color Picker)"],
+                                key="color_choice_g"
+                            )
+                            custom_hex_g = None
+                            if "Personalizado" in color_choice_g:
+                                custom_hex_g = st.color_picker("Color de fondo", value="#0B132B", key="picker_custom_g")
 
-                        if st.button("Generar Imagen", icon=":material/palette:", type="primary", use_container_width=True):
-                            with st.spinner("Creando diseño de placa..."):
-                                img_bytes = generate_social_media_image(frase_placa, autor_placa)
-                                st.image(img_bytes, caption="Placa lista para publicar")
-                                st.download_button(label="Descargar Placa", icon=":material/download:", data=img_bytes, file_name="placa_club_libertad.png", mime="image/png")
+                        if st.button("Generar Placa Gráfica", icon=":material/palette:", type="primary", use_container_width=True, key="btn_gen_g"):
+                            with st.spinner("Diseñando placa gráfica editorial..."):
+                                is_story = "Historia" in fmt_choice_g
+                                img_bytes = generate_social_media_image(
+                                    quote_text=frase_placa or "La libertad es el valor supremo.",
+                                    author_text=autor_placa,
+                                    header_category="IDEAS Y LIBERTAD",
+                                    color_palette=color_choice_g,
+                                    custom_hex=custom_hex_g,
+                                    format_type="story" if is_story else "square"
+                                )
+                                st.image(img_bytes, caption=f"Placa lista para publicar ({'1080x1920' if is_story else '1080x1080'})")
+                                st.download_button(
+                                    label="Descargar Placa",
+                                    icon=":material/download:",
+                                    data=img_bytes,
+                                    file_name=f"placa_{slugify(autor_placa)}.png",
+                                    mime="image/png",
+                                    key="dl_placa_g"
+                                )
 
     elif modo and "Buscar Cita Exacta" in modo:
         st.markdown("### :material/search: Buscar una Cita Específica")

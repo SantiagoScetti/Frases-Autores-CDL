@@ -63,12 +63,12 @@ def get_theme_css(is_dark: bool = True) -> str:
         seg_unselected_text = "#94A3B8"
         
     else:
-        # Paleta Modo Claro (Diseño Editorial Estructurado con Alto Contraste y Delimitación Nítida)
-        bg_app = "#F1F5F9"           # Slate-100: fondo de página suave para destacar las tarjetas
-        bg_card = "#FFFFFF"          # Blanco puro para tarjetas elevadas
-        bg_panel = "#F8FAFC"         # Slate-50 para paneles secundarios
-        border_card = "#CBD5E1"      # Slate-300: bordes nítidos y definidos (1.5px)
-        border_subtle = "#E2E8F0"    # Slate-200 para divisores interiores
+        # Paleta Modo Claro (Diseño Editorial Marfil Cálido y Tinta Profunda)
+        bg_app = "#FBF9F5"           # Crema marfil editorial cálido (papel libro fino)
+        bg_card = "#FFFFFF"          # Blanco cálido para tarjetas elevadas
+        bg_panel = "#F7F4EC"         # Crema suave para paneles secundarios
+        border_card = "#E8E2D8"      # Borde sutil y cálido
+        border_subtle = "#EFEAE1"    # Divisores suaves
         text_primary = "#0F172A"     # Slate-900: legibilidad máxima
         text_secondary = "#334155"   # Slate-700
         text_muted = "#64748B"       # Slate-500
@@ -78,22 +78,22 @@ def get_theme_css(is_dark: bool = True) -> str:
         brand_tint_border = "#FDBA74"# Orange-300
         brand_tint_text = "#9A3412"  # Orange-800
         
-        quote_bg = "#F8FAFC"         # Fondo cita editorial
+        quote_bg = "#F5F0E6"         # Fondo crema suave para citas editoriales
         quote_border = "#E85D04"     # Acento naranja institucional
-        quote_text = "#1E293B"       # Slate-800 para lectura serif
+        quote_text = "#0F172A"       # Tinta carbón profunda de alto contraste (fácil lectura en PC)
         quote_highlight_bg = "#FEF3C7"
         quote_highlight_text = "#92400E"
         
         input_bg = "#FFFFFF"         # Fondo blanco puro para TODOS los inputs
-        input_border = "#CBD5E1"     # Borde gris claro definido
+        input_border = "#DDD7CD"     # Borde cálido definido
         input_text = "#0F172A"       # Texto oscuro nítido
         
         tag_bg = "#FFF7ED"
         tag_border = "#FED7AA"
         tag_text = "#9A3412"
         
-        badge_bg = "#E2E8F0"         # Slate-200
-        badge_border = "#CBD5E1"     # Slate-300
+        badge_bg = "#EFEAE1"         # Crema neutro
+        badge_border = "#E0D9CD"     # Borde neutro
         badge_text = "#334155"       # Slate-700
         
         shadow_card = "0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04)"
@@ -706,13 +706,14 @@ def get_theme_css(is_dark: bool = True) -> str:
     /* ── Contenedores de Citas Editoriales (Blockquotes) ── */
     blockquote, .editorial-quote {{
         font-family: 'Merriweather', Georgia, serif !important;
-        font-size: 1.14rem !important;
+        font-size: 1.15rem !important;
+        font-weight: 500 !important;
         font-style: italic !important;
-        line-height: 1.7 !important;
+        line-height: 1.75 !important;
         color: {quote_text} !important;
         background-color: {quote_bg} !important;
-        border-left: 4px solid {quote_border} !important;
-        padding: 1.1rem 1.35rem !important;
+        border-left: 4.5px solid {quote_border} !important;
+        padding: 1.15rem 1.4rem !important;
         margin: 0.9rem 0 !important;
         border-radius: 0 10px 10px 0 !important;
         box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04) !important;
