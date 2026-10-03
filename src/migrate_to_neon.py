@@ -179,8 +179,8 @@ if os.path.exists(chroma_path):
                 meta = data["metadatas"][j] if data["metadatas"] else {}
                 title = meta.get("title", "")
                 author = meta.get("author", "")
-                emb = list(data["embeddings"][j])
-                rows.append((cid, title, author, doc, emb))
+                emb_str = "[" + ",".join(f"{float(x):.6f}" for x in data["embeddings"][j]) + "]"
+                rows.append((cid, title, author, doc, emb_str))
 
             execute_values(
                 cursor,
