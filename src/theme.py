@@ -271,6 +271,12 @@ def get_theme_css(is_dark: bool = True) -> str:
         color: #FFFFFF !important;
         font-size: 26px !important;
     }}
+    .brand-logo-icon svg {{
+        width: 26px !important;
+        height: 26px !important;
+        display: block !important;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }}
     .brand-title-group h1 {{
         font-family: 'Plus Jakarta Sans', sans-serif !important;
         font-weight: 800 !important;
@@ -815,26 +821,53 @@ def get_theme_css(is_dark: bool = True) -> str:
         padding: 0.18rem 0.65rem;
     }}
 
-    /* ── Acordeón / Expander ── */
-    html body .stApp [data-testid="stExpander"] {{
+    /* ── Acordeón / Expander (Solución definitiva para modo oscuro y claro) ── */
+    html body .stApp [data-testid="stExpander"],
+    html body .stApp details {{
         border: 1.5px solid {border_card} !important;
         background-color: {expander_bg} !important;
+        background: {expander_bg} !important;
         border-radius: 10px !important;
         box-shadow: none !important;
         margin-top: 0.6rem !important;
         margin-bottom: 0.6rem !important;
+        overflow: hidden !important;
     }}
-    html body .stApp [data-testid="stExpander"] summary {{
+    html body .stApp [data-testid="stExpander"] summary,
+    html body .stApp details summary,
+    html body .stApp [data-testid="stExpander"] summary > div,
+    html body .stApp details summary > div {{
+        background-color: {expander_bg} !important;
+        background: {expander_bg} !important;
         font-size: 0.88rem !important;
         font-weight: 600 !important;
-        color: {text_secondary} !important;
+        color: {text_primary} !important;
         padding: 0.65rem 1rem !important;
+        border-radius: 8px !important;
+        transition: all 0.15s ease !important;
     }}
-    html body .stApp [data-testid="stExpander"] summary:hover {{
+    html body .stApp [data-testid="stExpander"] summary:hover,
+    html body .stApp details summary:hover {{
         color: {brand_primary} !important;
+        background-color: {brand_tint} !important;
+        background: {brand_tint} !important;
     }}
-    html body .stApp [data-testid="stExpander"] summary svg {{
-        fill: {text_muted} !important;
+    html body .stApp [data-testid="stExpander"] summary p,
+    html body .stApp [data-testid="stExpander"] summary span,
+    html body .stApp details summary p,
+    html body .stApp details summary span {{
+        color: inherit !important;
+    }}
+    html body .stApp [data-testid="stExpander"] summary svg,
+    html body .stApp details summary svg {{
+        fill: {brand_primary} !important;
+    }}
+    html body .stApp [data-testid="stExpanderDetails"],
+    html body .stApp details > div:last-child {{
+        background-color: {expander_bg} !important;
+        background: {expander_bg} !important;
+        color: {text_secondary} !important;
+        padding: 0.75rem 1rem !important;
     }}
 
     /* Placeholders */
@@ -894,6 +927,11 @@ def get_theme_css(is_dark: bool = True) -> str:
 
         .brand-logo-icon .material-symbols-rounded {{
             font-size: 22px !important;
+        }}
+
+        .brand-logo-icon svg {{
+            width: 22px !important;
+            height: 22px !important;
         }}
 
         .brand-title-group {{
@@ -967,6 +1005,23 @@ def get_theme_css(is_dark: bool = True) -> str:
             flex-shrink: 0 !important;
             white-space: nowrap !important;
             border-radius: 8px 8px 0 0 !important;
+        }}
+
+        /* Ocultar botones de flecha/chevron de scroll en pestañas móviles */
+        html body .stApp .stTabs button[data-baseweb="button"],
+        html body .stApp .stTabs [data-baseweb="tab-list"] ~ button,
+        html body .stApp .stTabs [data-baseweb="tab-list"] + button,
+        html body .stApp .stTabs button:not([role="tab"]) {{
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            background: transparent !important;
+            background-color: transparent !important;
         }}
 
         /* 4.4. Columnas y Botones de Acción en Móvil */

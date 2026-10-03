@@ -284,13 +284,26 @@ def search_chunks_pgvector(query_embedding: List[float], n_results: int = 3, aut
         conditions = []
         params = []
         if author and author != "Todos":
-            conditions.append("author = %s")
-            params.append(author)
+            if isinstance(author, (list, tuple, set)):
+                conditions.append("author = ANY(%s)")
+                params.append(list(author))
+            elif isinstance(author, dict) and "$in" in author:
+                conditions.append("author = ANY(%s)")
+                params.append(list(author["$in"]))
+            else:
+                conditions.append("author = %s")
+                params.append(str(author))
         if title and title != "Todos":
             conditions.append("title = %s")
             params.append(title)
         
         where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+        # Si hay filtros específicos (autor o libro), deshabilitamos temporalmente el indexscan de HNSW
+        # para que PostgreSQL filtre primero por autor/título y ordene los chunks coincidentes,
+        # evitando que el grafo HNSW descarte resultados por cutoff de post-filtrado.
+        if conditions:
+            cursor.execute("SET LOCAL enable_indexscan = off;")
+
         query = f"""
             SELECT id, title, author, content
             FROM book_chunks

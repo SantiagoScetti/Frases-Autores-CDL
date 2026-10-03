@@ -164,6 +164,9 @@ class UnifiedVectorCollection:
                         if "title" in cond:
                             title_filter = cond["title"]
 
+            if author_filter and isinstance(author_filter, dict) and "$in" in author_filter:
+                author_filter = author_filter["$in"]
+
             rows = db.search_chunks_pgvector(emb, n_results=n_results, author=author_filter, title=title_filter)
             docs = [r[3] for r in rows]
             metas = [{"title": r[1], "author": r[2]} for r in rows]
@@ -323,8 +326,15 @@ col_head_brand, col_theme_switch = st.columns([3.8, 1.2], vertical_alignment="ce
 with col_head_brand:
     st.markdown("""
     <div class="brand-header-box">
-        <div class="brand-logo-icon">
-            <span class="material-symbols-rounded">local_fire_department</span>
+        <div class="brand-logo-icon" title="Club de la Libertad — Antorcha de la Libertad">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C10.5 4.5 11 7 9.5 8.5C8.5 7.5 8.5 6 9 4.5C6.5 6.5 6 10 7.5 12.5C8 13.3 8.8 14 9.8 14.5C9.5 13.5 9.7 12.5 10.3 11.8C10.8 12.8 11.7 13.5 12.8 13.8C14.8 14.3 16.5 13 16.8 11C17.2 9 16 7 14.5 5.5C14.8 7 14 8 13.2 8.5C13.2 6.5 13 4 12 2Z" fill="#FFF275"/>
+                <path d="M12 5.5C11.2 7 11.5 8.5 10.8 9.5C10.2 8.8 10.2 7.8 10.5 7C9 8.2 8.8 10.5 9.8 12C10.1 12.5 10.6 13 11.2 13.2C11 12.6 11.2 12 11.5 11.5C11.8 12.2 12.5 12.7 13.2 12.8C14.5 13.1 15.5 12.2 15.7 11C16 9.8 15.2 8.5 14.2 7.5C14.5 8.5 14 9.2 13.5 9.5C13.5 8.2 13.2 6.8 12 5.5Z" fill="#FFFFFF"/>
+                <path d="M7 14H17L15.6 17.2H8.4L7 14Z" fill="#FFFFFF"/>
+                <rect x="8" y="17.8" width="8" height="1.4" rx="0.7" fill="#FFF275"/>
+                <path d="M9.5 19.8L10.3 26H13.7L14.5 19.8H9.5Z" fill="#FFFFFF"/>
+                <rect x="10" y="26.3" width="4" height="1.4" rx="0.7" fill="#FFF275"/>
+            </svg>
         </div>
         <div class="brand-title-group">
             <h1>Club de la Libertad</h1>
@@ -363,143 +373,132 @@ tab_frases, tab_generador, tab_banco, tab_biblioteca, tab_admin = st.tabs([
 # TAB 1 — FRASES RÁPIDAS
 # ═══════════════════════════════════════════════════════════════════════════════
 with tab_frases:
-    st.markdown("## :material/bolt: Frases Rápidas para Historias e Instagram")
-    st.markdown(
-        "Generá contenido editorial para historias y posteos rápidos del estilo del Club: "
-        "una **frase potente** + el **nombre del autor** + un aviso de disponibilidad del libro."
-    )
+    st.markdown("## :material/bolt: Frases Rápidas")
+    st.caption("Citas y reflexiones editoriales basadas en el acervo de libros de la Fundación.")
 
-    col_config_f, col_main_f = st.columns([1, 1.8], gap="large")
-
-    with col_config_f:
-        st.markdown("### :material/tune: Parámetros del Posteo")
-        with st.container(key="card_config_f", border=True):
+    with st.container(key="card_main_f", border=True):
+        col_aut, col_lib = st.columns(2)
+        with col_aut:
             autor_frase = st.selectbox(":material/person: Autor", lista_autores, key="frase_autor")
-
+        with col_lib:
             lista_libros_f = ["Todos"]
             if autor_frase != "Todos" and autor_frase in libros_por_autor:
                 lista_libros_f += sorted(list(libros_por_autor[autor_frase]))
             libro_frase = st.selectbox(":material/menu_book: Libro", lista_libros_f, key="frase_libro")
 
+        tema_libre = st.text_input(
+            ":material/lightbulb: Concepto o idea clave (opcional)",
+            placeholder="Ej: libertad individual, propiedad privada, cálculo económico...",
+            key="tema_frase_input"
+        )
+
+        # Sugerencias dinámicas según el autor
+        sugerencias = ["Libertad", "Propiedad Privada", "Estado", "Mercado"]
+        if autor_frase != "Todos":
+            sugerencias = AUTORES_TEMAS_CLAVE.get(autor_frase, sugerencias)
+
+        tema_pildora = st.pills("Sugerencias", options=sugerencias, selection_mode="single", key="pills_tema", label_visibility="collapsed")
+        tema_frase = tema_pildora if tema_pildora else tema_libre
+
+        col_btn1, col_btn2 = st.columns([1.4, 1])
+        with col_btn1:
+            btn_generar = st.button("Generar Publicación (IA)", icon=":material/auto_awesome:", type="primary", use_container_width=True, key="btn_generar_frase")
+        with col_btn2:
+            btn_extraer = st.button("Citas Directas (Sin IA)", icon=":material/search:", use_container_width=True, key="btn_extraer_sin_ia")
+
+    with st.expander(":material/tune: Opciones Avanzadas (Formato, variantes, CTA)", expanded=False):
+        col_opt1, col_opt2 = st.columns(2)
+        with col_opt1:
             tipo_frase = st.radio(
                 ":material/category: Formato de Publicación",
                 ["Frase inspiradora", "Efeméride / Fecha histórica", "Recomendación de libro"],
                 key="frase_tipo",
             )
-
-            disponibilidad = st.multiselect(
-                ":material/storefront: Disponibilidad del Libro",
-                ["Disponible en la Biblioteca del Club", "A la venta en la tienda", "Disponible en la editorial"],
-                default=["Disponible en la Biblioteca del Club"],
-                key="frase_dispo",
-            )
-            
-            n_variaciones = st.slider(":material/format_list_numbered: Cantidad de opciones a generar (IA)", 1, 4, 1)
-            incluir_cta = st.checkbox(":material/campaign: Incluir placa CTA (Venta de libros)", value=False)
-
-    with col_main_f:
-        st.markdown("### :material/draw: Generador de Contenido")
-        with st.container(key="card_main_f", border=True):
             if tipo_frase == "Efeméride / Fecha histórica":
-                fecha_efemeride = st.text_input(":material/event: ¿Qué efeméride? (ej: Nacimiento de Bastiat, 30 de junio)",
-                                                placeholder="Día del Abogado - Juan Bautista Alberdi", key="efem_input")
+                fecha_efemeride = st.text_input(
+                    ":material/event: ¿Qué efeméride?",
+                    placeholder="Ej: Nacimiento de Bastiat, 30 de junio",
+                    key="efem_input"
+                )
             else:
                 fecha_efemeride = None
+        with col_opt2:
+            n_variaciones = st.slider(":material/format_list_numbered: Cantidad de opciones", 1, 4, 1, key="frase_n_var")
+            incluir_cta = st.checkbox(":material/campaign: Incluir placa CTA (Biblioteca)", value=False, key="frase_incluir_cta")
 
-            tema_libre = st.text_input(":material/lightbulb: Tema o idea clave (opcional)",
-                                       placeholder="Ej: libertad individual, propiedad privada...",
-                                       key="tema_frase_input")
+    dispo_texto = "Disponible en la Biblioteca del Club de la Libertad."
+
+    if btn_extraer:
+        with st.spinner("Extrayendo citas del libro..."):
+            st.session_state.frase_rapida_generada = None
+            search_query = tema_frase or "importante fundamental esencial principal"
+            where_c = None
+            if libro_frase != "Todos":
+                where_c = {"title": libro_frase}
+            elif autor_frase != "Todos":
+                aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
+                where_c = {"author": {"$in": aliases}}
             
-            # Sugerencias dinámicas según el autor
-            sugerencias = ["Libertad", "Propiedad Privada", "Estado", "Mercado"]
-            if autor_frase != "Todos":
-                sugerencias = AUTORES_TEMAS_CLAVE.get(autor_frase, sugerencias)
-                
-            st.caption(":material/assistant: Sugerencias conceptuales para este autor:")
-            tema_pildora = st.pills("Sugerencias", options=sugerencias, selection_mode="single", key="pills_tema", label_visibility="collapsed")
+            kwargs = {"query_texts": [search_query], "n_results": 20}
+            if where_c: kwargs["where"] = where_c
             
-            # El tema final es el que el usuario escribió o el que clickeó en la píldora
-            tema_frase = tema_pildora if tema_pildora else tema_libre
+            res = collection.query(**kwargs)
+            if res['documents'] and len(res['documents'][0]):
+                docs = res['documents'][0]
+                metas = res['metadatas'][0]
+                indices = list(range(len(docs)))
+                random.shuffle(indices)
+                indices = indices[:4]
+                st.session_state.citas_crudas = [docs[i] for i in indices]
+                st.session_state.citas_crudas_meta = [metas[i] for i in indices]
+            else:
+                st.warning("No se encontraron citas con esos parámetros.")
 
-            col_btn1, col_btn2 = st.columns(2)
-            with col_btn1:
-                btn_generar = st.button("Generar Frase (IA)", icon=":material/auto_awesome:", type="primary", use_container_width=True, key="btn_generar_frase")
-            with col_btn2:
-                btn_extraer = st.button("Extraer Citas Directas (Sin IA)", icon=":material/search:", use_container_width=True, key="btn_extraer_sin_ia")
+    if btn_generar:
+        with st.spinner("Buscando en la biblioteca y generando redacción editorial..."):
+            st.session_state.citas_crudas = None
+            search_query = fecha_efemeride or tema_frase or (autor_frase if autor_frase != "Todos" else "libertad")
+            where_c = None
+            if libro_frase != "Todos":
+                where_c = {"title": libro_frase}
+            elif autor_frase != "Todos":
+                aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
+                where_c = {"author": {"$in": aliases}}
 
-        if btn_extraer:
-            with st.spinner("Extrayendo citas del libro..."):
-                st.session_state.frase_rapida_generada = None
-                search_query = tema_frase or "importante fundamental esencial principal"
-                where_c = None
-                if libro_frase != "Todos":
-                    where_c = {"title": libro_frase}
-                elif autor_frase != "Todos":
-                    aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
-                    where_c = {"author": {"$in": aliases}}
+            kwargs = {"query_texts": [search_query], "n_results": max(10, n_variaciones * 3)}
+            if where_c:
+                kwargs["where"] = where_c
+
+            results = collection.query(**kwargs)
+
+            fragmentos_seleccionados = []
+            meta_base = {}
+            if results['documents'] and len(results['documents'][0]):
+                docs = results['documents'][0]
+                metas = results['metadatas'][0]
+                indices = list(range(len(docs)))
+                random.shuffle(indices)
+                indices = indices[:n_variaciones]
                 
-                kwargs = {"query_texts": [search_query], "n_results": 20}
-                if where_c: kwargs["where"] = where_c
-                
-                res = collection.query(**kwargs)
-                if res['documents'] and len(res['documents'][0]):
-                    docs = res['documents'][0]
-                    metas = res['metadatas'][0]
-                    indices = list(range(len(docs)))
-                    random.shuffle(indices)
-                    indices = indices[:4]
-                    st.session_state.citas_crudas = [docs[i] for i in indices]
-                    st.session_state.citas_crudas_meta = [metas[i] for i in indices]
-                else:
-                    st.warning("No se encontraron citas con esos parámetros.")
+                for i in indices:
+                    fragmentos_seleccionados.append(docs[i])
+                meta_base = metas[indices[0]] if metas else {}
+            
+            fragmentos_texto = "\n\n---\n\n".join([f"Fragmento de Referencia {i+1}:\n\"{f}\"" for i, f in enumerate(fragmentos_seleccionados)])
 
-        if btn_generar:
-            with st.spinner("Buscando en la biblioteca y generando redacción editorial..."):
-                st.session_state.citas_crudas = None
-                search_query = fecha_efemeride or tema_frase or (autor_frase if autor_frase != "Todos" else "libertad")
-                where_c = None
-                if libro_frase != "Todos":
-                    where_c = {"title": libro_frase}
-                elif autor_frase != "Todos":
-                    aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
-                    where_c = {"author": {"$in": aliases}}
+            autor_real = meta_base.get("author", autor_frase if autor_frase != "Todos" else "Autor clásico")
+            libro_real = meta_base.get("title", "")
 
-                kwargs = {"query_texts": [search_query], "n_results": max(10, n_variaciones * 3)}
-                if where_c:
-                    kwargs["where"] = where_c
+            instruccion_vars = f"\n\nATENCIÓN: Genera {n_variaciones} opciones DISTINTAS para este posteo. Numéralas como 'Opción 1', 'Opción 2', etc. y sepáralas con una línea divisoria (---)." if n_variaciones > 1 else ""
 
-                results = collection.query(**kwargs)
-
-                fragmentos_seleccionados = []
-                meta_base = {}
-                if results['documents'] and len(results['documents'][0]):
-                    docs = results['documents'][0]
-                    metas = results['metadatas'][0]
-                    indices = list(range(len(docs)))
-                    random.shuffle(indices)
-                    indices = indices[:n_variaciones]
-                    
-                    for i in indices:
-                        fragmentos_seleccionados.append(docs[i])
-                    meta_base = metas[indices[0]] if metas else {}
-                
-                fragmentos_texto = "\n\n---\n\n".join([f"Fragmento de Referencia {i+1}:\n\"{f}\"" for i, f in enumerate(fragmentos_seleccionados)])
-
-                autor_real = meta_base.get("author", autor_frase if autor_frase != "Todos" else "Autor clásico")
-                libro_real = meta_base.get("title", "")
-
-                dispo_texto = " | ".join(disponibilidad) if disponibilidad else ""
-
-                instruccion_vars = f"\n\nATENCIÓN: Genera {n_variaciones} opciones DISTINTAS para este posteo. Numéralas como 'Opción 1', 'Opción 2', etc. y sepáralas con una línea divisoria (---)." if n_variaciones > 1 else ""
-
-                # ── Prompts editoriales según tipo ──
-                if tipo_frase == "Frase inspiradora":
-                    prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
+            # ── Prompts editoriales según tipo ──
+            if tipo_frase == "Frase inspiradora":
+                prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
 
 Tu tarea es crear una publicación CORTA para Instagram Stories o feed, al estilo de las cuentas de alto nivel que publican citas de pensadores clásicos liberales.
 
 FORMATO REQUERIDO (estricto):
-1. Una frase impactante del autor (máximo 2 oraciones). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>` al principio de la línea).** Si no encontrás una cita textual perfecta, parafraseá fielmente. Si generás varias opciones, basate en un fragmento distinto para cada una.
+1. Una frase impactante del autor (máximo 2 oraciones). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>` al principio de la línea).** Si no encontrás una cita textual perfecta, parafraseá fielmente basándote en los fragmentos. Si generás varias opciones, basate en un fragmento distinto para cada una.
 2. La firma claramente separada: — **{autor_real}**
 3. Caption para Instagram: máximo 2-3 líneas explicando brevemente la lección filosófica o económica en lenguaje moderno, accesible y riguroso. Sin hashtags.
 4. Aviso: {dispo_texto}
@@ -511,14 +510,14 @@ Tema: {tema_frase or 'libertad, ideas liberales'}
 
 REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS bajo cualquier circunstancia. Mantén un estilo sobrio, periodístico y formal.{instruccion_vars}"""
 
-                elif tipo_frase == "Efeméride / Fecha histórica":
-                    prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
+            elif tipo_frase == "Efeméride / Fecha histórica":
+                prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
 
 Tu tarea es crear una publicación para Instagram sobre la efeméride: "{fecha_efemeride}".
 
 FORMATO REQUERIDO (estricto, estilo Efemérides Libertarias del Club):
 1. Encabezado: la fecha y el nombre del personaje o evento histórico.
-2. Una frase icónica del personaje (si aplica). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>`).**
+2. Una frase icónica del personaje (si aplica). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>`).** Con la firma: — **{autor_real}**
 3. Caption para Instagram: 3-5 líneas máximo. Explica quién fue esta persona y por qué es importante para las ideas de la libertad. Tono respetuoso, formal y directo. Sin hashtags.
 4. Aviso: {dispo_texto}
 
@@ -527,90 +526,91 @@ Si hay material del autor en la biblioteca, usá estos fragmentos como referenci
 
 REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Estilo editorial sobrio y clásico.{instruccion_vars}"""
 
-                else:  # Recomendación de libro
-                    prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
+            else:  # Recomendación de libro
+                prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
 
 Tu tarea es crear una publicación CORTA para Instagram recomendando el libro '{libro_real}' de {autor_real}.
 
 FORMATO REQUERIDO:
-1. Frase gancho: una pregunta o afirmación provocadora basada en el libro (1 oración). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>`).**
-2. Breve descripción del libro (2-3 oraciones): tesis central y relevancia para el debate de ideas.
-3. Disponibilidad: {dispo_texto}
+1. Frase gancho: una cita provocadora o reflexión central extraída del libro (1 oración). **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>`).**
+2. La firma claramente separada: — **{autor_real}** (del libro *{libro_real}*)
+3. Breve reseña editorial (2-3 oraciones): tesis central y relevancia para el debate de ideas contemporáneo.
+4. Disponibilidad: {dispo_texto}
 
 Fragmentos de referencia del libro (para inspirar el gancho o la descripción):
 {fragmentos_texto}
 
 REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Tono riguroso, intelectual y directo. Sin hashtags.{instruccion_vars}"""
 
-                resultado = generar_respuesta(prompt)
-                if resultado:
-                    if incluir_cta:
-                        cta_text = "\n\n---\n**Texto sugerido para Story CTA:**\n¿Te interesa profundizar en estas ideas? Conseguí este y otros libros en la Biblioteca del Club de la Libertad.\nMandanos un mensaje directo para más información."
-                        resultado += cta_text
-                    st.session_state.frase_rapida_generada = clean_emojis(resultado)
-                    st.session_state.frase_rapida_original = fragmentos_texto
+            resultado = generar_respuesta(prompt)
+            if resultado:
+                if incluir_cta:
+                    cta_text = "\n\n---\n**Texto sugerido para Story CTA:**\n¿Te interesa profundizar en estas ideas? Conseguí este y otros libros en la Biblioteca del Club de la Libertad.\nMandanos un mensaje directo para más información."
+                    resultado += cta_text
+                st.session_state.frase_rapida_generada = clean_emojis(resultado)
+                st.session_state.frase_rapida_original = fragmentos_texto
 
-        # ── Mostrar resultado IA ──
-        if st.session_state.frase_rapida_generada:
-            st.divider()
-            st.markdown("### :material/history_edu: Borrador Generado")
-            with st.container(key="card_result_f", border=True):
-                st.markdown(st.session_state.frase_rapida_generada)
-                
-            if st.session_state.frase_rapida_original:
-                with st.expander("Ver fragmento original del libro (fuente)", icon=":material/source:"):
-                    st.markdown(st.session_state.frase_rapida_original)
+    # ── Mostrar resultado IA ──
+    if st.session_state.frase_rapida_generada:
+        st.divider()
+        st.markdown("### :material/history_edu: Borrador Generado")
+        with st.container(key="card_result_f", border=True):
+            st.markdown(st.session_state.frase_rapida_generada)
+            
+        if st.session_state.frase_rapida_original:
+            with st.expander("Ver fragmento original del libro (fuente)", icon=":material/source:"):
+                st.markdown(st.session_state.frase_rapida_original)
 
-            # Botones de acción: Guardar / Descartar / Regenerar
-            col_guardar, col_descartar, col_limpiar = st.columns(3)
+        # Botones de acción: Guardar / Descartar / Regenerar
+        col_guardar, col_descartar, col_limpiar = st.columns(3)
 
-            with col_guardar:
-                if st.button("Guardar en Banco", icon=":material/bookmark:", type="primary", use_container_width=True, key="save_frase"):
-                    topic_label = clean_emojis(fecha_efemeride or tema_frase or f"Frase de {autor_frase}")
-                    tone_label = clean_emojis(tipo_frase)
-                    content_clean = clean_emojis(st.session_state.frase_rapida_generada)
-                    db.insert_post(topic_label, tone_label, content_clean)
-                    st.success("Guardada exitosamente en el Banco de Publicaciones.")
+        with col_guardar:
+            if st.button("Guardar en Banco", icon=":material/bookmark:", type="primary", use_container_width=True, key="save_frase"):
+                topic_label = clean_emojis(fecha_efemeride or tema_frase or f"Frase de {autor_frase}")
+                tone_label = clean_emojis(tipo_frase)
+                content_clean = clean_emojis(st.session_state.frase_rapida_generada)
+                db.insert_post(topic_label, tone_label, content_clean)
+                st.success("Guardada exitosamente en el Banco de Publicaciones.")
 
-            with col_descartar:
-                if st.button("Descartar", icon=":material/close:", use_container_width=True, key="discard_frase"):
-                    st.session_state.frase_rapida_generada = None
-                    st.rerun()
-
-            with col_limpiar:
-                if st.button("Regenerar", icon=":material/refresh:", use_container_width=True, key="regen_frase"):
-                    st.session_state.frase_rapida_generada = None
-                    st.rerun()
-
-            # Sección de placa visual
-            st.divider()
-            st.markdown("### :material/image: Placa Gráfica para Redes")
-            with st.container(key="card_placa_f", border=True):
-                col_placa_frase, col_placa_autor = st.columns(2)
-                with col_placa_frase:
-                    frase_placa = st.text_area(":material/format_quote: Frase para la placa", value="Pega aquí la frase corta...", key="placa_frase_txt")
-                with col_placa_autor:
-                    autor_placa = st.text_input(":material/badge: Firma / Autor", value=autor_frase if autor_frase != "Todos" else "Autor", key="placa_frase_autor")
-
-                if st.button("Generar Imagen", icon=":material/palette:", type="primary", key="gen_placa_frase"):
-                    with st.spinner("Creando placa gráfica..."):
-                        img_bytes = generate_social_media_image(frase_placa, autor_placa)
-                        st.image(img_bytes, caption="Placa lista para publicar")
-                        st.download_button(label="Descargar Placa", icon=":material/download:", data=img_bytes, file_name="placa_club_libertad.png", mime="image/png", key="dl_placa_frase")
-
-        # ── Mostrar citas directas (Sin IA) ──
-        if st.session_state.citas_crudas:
-            st.divider()
-            st.markdown("### :material/format_quote: Citas Extraídas Directamente de la Biblioteca")
-            for i, cita in enumerate(st.session_state.citas_crudas):
-                meta = st.session_state.citas_crudas_meta[i] if st.session_state.citas_crudas_meta else {}
-                with st.container(key=f"card_raw_quote_{i}", border=True):
-                    st.markdown(f"*{clean_emojis(cita)}*")
-                    st.caption(f"— {clean_emojis(meta.get('author', 'Autor'))} en '{clean_emojis(meta.get('title', 'Libro'))}'")
-                    
-            if st.button("Limpiar Resultados", icon=":material/clear_all:", key="clear_citas_crudas"):
-                st.session_state.citas_crudas = None
+        with col_descartar:
+            if st.button("Descartar", icon=":material/close:", use_container_width=True, key="discard_frase"):
+                st.session_state.frase_rapida_generada = None
                 st.rerun()
+
+        with col_limpiar:
+            if st.button("Regenerar", icon=":material/refresh:", use_container_width=True, key="regen_frase"):
+                st.session_state.frase_rapida_generada = None
+                st.rerun()
+
+        # Sección de placa visual
+        st.divider()
+        st.markdown("### :material/image: Placa Gráfica para Redes")
+        with st.container(key="card_placa_f", border=True):
+            col_placa_frase, col_placa_autor = st.columns(2)
+            with col_placa_frase:
+                frase_placa = st.text_area(":material/format_quote: Frase para la placa", value="Pega aquí la frase corta...", key="placa_frase_txt")
+            with col_placa_autor:
+                autor_placa = st.text_input(":material/badge: Firma / Autor", value=autor_frase if autor_frase != "Todos" else "Autor", key="placa_frase_autor")
+
+            if st.button("Generar Imagen", icon=":material/palette:", type="primary", key="gen_placa_frase"):
+                with st.spinner("Creando placa gráfica..."):
+                    img_bytes = generate_social_media_image(frase_placa, autor_placa)
+                    st.image(img_bytes, caption="Placa lista para publicar")
+                    st.download_button(label="Descargar Placa", icon=":material/download:", data=img_bytes, file_name="placa_club_libertad.png", mime="image/png", key="dl_placa_frase")
+
+    # ── Mostrar citas directas (Sin IA) ──
+    if st.session_state.citas_crudas:
+        st.divider()
+        st.markdown("### :material/format_quote: Citas Extraídas Directamente de la Biblioteca")
+        for i, cita in enumerate(st.session_state.citas_crudas):
+            meta = st.session_state.citas_crudas_meta[i] if st.session_state.citas_crudas_meta else {}
+            with st.container(key=f"card_raw_quote_{i}", border=True):
+                st.markdown(f"*{clean_emojis(cita)}*")
+                st.caption(f"— {clean_emojis(meta.get('author', 'Autor'))} en '{clean_emojis(meta.get('title', 'Libro'))}'")
+                
+        if st.button("Limpiar Resultados", icon=":material/clear_all:", key="clear_citas_crudas"):
+            st.session_state.citas_crudas = None
+            st.rerun()
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -658,7 +658,8 @@ with tab_generador:
                             if libro_seleccionado != "Todos":
                                 where_clause = {"title": libro_seleccionado}
                             elif autor_seleccionado != "Todos":
-                                where_clause = {"author": autor_seleccionado}
+                                aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_seleccionado] + [autor_seleccionado]
+                                where_clause = {"author": {"$in": aliases}}
 
                             kwargs = {"query_texts": [tema], "n_results": 3}
                             if where_clause:
