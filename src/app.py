@@ -1,4 +1,15 @@
 import os
+import sys
+
+# Asegurar que el directorio 'src' esté siempre en sys.path (indispensable para Streamlit Cloud en Linux)
+SRC_DIR = os.path.dirname(os.path.abspath(__file__))
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
+
+REPO_ROOT = os.path.dirname(SRC_DIR)
+if REPO_ROOT not in sys.path:
+    sys.path.insert(1, REPO_ROOT)
+
 import re
 import html
 import base64
@@ -8,14 +19,27 @@ from chromadb.utils import embedding_functions
 from google import genai
 from groq import Groq
 from dotenv import load_dotenv
-from image_generator import generate_social_media_image, slugify
+
+try:
+    from image_generator import generate_social_media_image, slugify
+except ImportError:
+    from src.image_generator import generate_social_media_image, slugify
+
 import shutil
 import subprocess
-import db
-import ingest
+
+try:
+    import db
+    import ingest
+    import theme
+    from theme import get_theme_css
+except ImportError:
+    from src import db
+    from src import ingest
+    from src import theme
+    from src.theme import get_theme_css
+
 import random
-import theme
-from theme import get_theme_css
 
 # Inicializar Base de Datos de forma eficiente (solo 1 vez por sesión/arranque)
 @st.cache_resource

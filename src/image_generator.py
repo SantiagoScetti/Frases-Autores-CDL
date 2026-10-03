@@ -2,7 +2,6 @@ import os
 import re
 import io
 import textwrap
-import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -155,18 +154,14 @@ def generate_social_media_image(
         except Exception:
             pass
 
-    # ── 1. Fondo Gradiente Suave ──
-    bg_arr = np.zeros((H, W, 3), dtype=np.uint8)
-    top_c = palette["top"]
-    bot_c = palette["bottom"]
-    for y in range(H):
-        t = y / H
-        r = int(top_c[0] * (1 - t) + bot_c[0] * t)
-        g = int(top_c[1] * (1 - t) + bot_c[1] * t)
-        b = int(top_c[2] * (1 - t) + bot_c[2] * t)
-        bg_arr[y, :] = [r, g, b]
+    # ── 1. Fondo Gradiente Suave (Pillow nativo sin dependencias externas) ──
+    base_grad = Image.new('L', (1, H))
+    base_grad.putdata([int(255 * (y / H)) for y in range(H)])
+    base_grad = base_grad.resize((W, H))
 
-    canvas = Image.fromarray(bg_arr).convert('RGBA')
+    top_img = Image.new('RGB', (W, H), color=palette["top"])
+    bot_img = Image.new('RGB', (W, H), color=palette["bottom"])
+    canvas = Image.composite(bot_img, top_img, base_grad).convert('RGBA')
     draw = ImageDraw.Draw(canvas)
 
     # ── 2. Marco Editorial con Esquineros ──
