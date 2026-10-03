@@ -64,6 +64,17 @@ libros_pendientes = {
     "Nación, estado y economía - Mises.txt": ["Nacion estado y economia", "Mises"]
 }
 
+import re
+
+def clean_text(text):
+    # Remove standalone numbers (likely page numbers)
+    text = re.sub(r'^\s*\d+\s*$', '', text, flags=re.MULTILINE)
+    # Remove multiple spaces
+    text = re.sub(r' +', ' ', text)
+    # Remove multiple newlines
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    return text.strip()
+
 def extract_text_from_pdf(pdf_path, txt_path):
     try:
         reader = PdfReader(pdf_path)
@@ -71,6 +82,9 @@ def extract_text_from_pdf(pdf_path, txt_path):
         for page in reader.pages:
             t = page.extract_text()
             if t: text += t + "\n"
+        
+        text = clean_text(text)
+        
         with open(txt_path, "w", encoding="utf-8") as f:
             f.write(text)
         return True
