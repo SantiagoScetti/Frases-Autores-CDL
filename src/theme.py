@@ -211,17 +211,27 @@ def get_theme_css(is_dark: bool = True) -> str:
     /* ── Ocultar barra superior y menú nativo de Streamlit (Share, GitHub, Menú 3 puntos, Deploy) ── */
     header[data-testid="stHeader"],
     [data-testid="stHeader"],
+    .stAppHeader,
+    [data-testid="stAppToolbar"],
+    .stAppToolbar,
+    [data-testid="stToolbarActions"],
     [data-testid="stToolbar"],
     [data-testid="stDecoration"],
     .stDeployButton,
-    #MainMenu {{
+    #MainMenu,
+    div[class*="stAppToolbar"],
+    div[class*="ToolbarActions"] {{
         display: none !important;
         visibility: hidden !important;
-        height: 0 !important;
-        min-height: 0 !important;
+        height: 0px !important;
+        min-height: 0px !important;
+        max-height: 0px !important;
         padding: 0 !important;
         margin: 0 !important;
         overflow: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        z-index: -9999 !important;
     }}
 
     /* ── Ocultar footer nativo y badge / botón Manage app de Streamlit ── */
@@ -510,19 +520,26 @@ def get_theme_css(is_dark: bool = True) -> str:
     html body .stApp [data-testid="stTabs"] [data-baseweb="tab-highlight"],
     html body .stApp [data-testid="stTabs"] [data-baseweb="tab-border"],
     html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"],
-    html body .stApp [data-testid="stTabs"] div[role="tablist"] {{
+    html body .stApp [data-testid="stTabs"] div[role="tablist"],
+    html body .stApp [data-testid="stTabs"] div,
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"] > div {{
         background-color: transparent !important;
         background: transparent !important;
+        background-image: none !important;
+        box-shadow: none !important;
     }}
-    /* Ocultar botones de scroll BaseWeb y sus fondos blancos */
-    html body .stApp [data-testid="stTabs"] > div:first-child button:not([role="tab"]),
-    html body .stApp [data-testid="stTabs"] button[data-baseweb="button"]:not([role="tab"]),
+    /* Ocultar ABSOLUTAMENTE cualquier botón de scroll BaseWeb y sus envoltorios */
+    html body .stApp [data-testid="stTabs"] button:not([role="tab"]),
+    html body .stApp [data-testid="stTabs"] [role="button"]:not([role="tab"]),
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"] button:not([role="tab"]),
     html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"] ~ button,
     html body .stApp [data-testid="stTabs"] button ~ [data-baseweb="tab-list"],
-    html body .stApp [data-testid="stTabs"] button[aria-label*="scroll" i],
-    html body .stApp [data-testid="stTabs"] button[aria-label*="tab" i]:not([role="tab"]),
-    html body .stApp [data-testid="stTabs"] button[aria-label*="next" i],
-    html body .stApp [data-testid="stTabs"] button[aria-label*="previous" i] {{
+    html body .stApp [data-testid="stTabs"] *[class*="ScrollButton"],
+    html body .stApp [data-testid="stTabs"] *[class*="scroll-button"],
+    html body .stApp [data-testid="stTabs"] *[aria-label*="scroll" i],
+    html body .stApp [data-testid="stTabs"] *[aria-label*="tab" i]:not([role="tab"]),
+    html body .stApp [data-testid="stTabs"] *[aria-label*="next" i],
+    html body .stApp [data-testid="stTabs"] *[aria-label*="previous" i] {{
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
@@ -532,12 +549,17 @@ def get_theme_css(is_dark: bool = True) -> str:
         margin: 0 !important;
         border: none !important;
         background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        box-shadow: none !important;
         pointer-events: none !important;
     }}
     html body .stApp [data-testid="stTabs"] > div:first-child::before,
     html body .stApp [data-testid="stTabs"] > div:first-child::after,
     html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"]::before,
-    html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"]::after {{
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"]::after,
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"]::before,
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"]::after {{
         display: none !important;
         background: transparent !important;
         background-image: none !important;
@@ -1155,41 +1177,59 @@ def get_theme_css(is_dark: bool = True) -> str:
 
     /* ── Footer Institucional y Crédito a Santi Scetti ── */
     .cdl-app-footer {{
-        margin-top: 4rem !important;
-        padding: 2.2rem 1rem 3.5rem 1rem !important;
+        margin-top: 6rem !important;
+        padding: 3rem 1.5rem 4.5rem 1.5rem !important;
         border-top: 1.5px solid {border_card} !important;
         text-align: center !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        gap: 8px !important;
+        justify-content: center !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        gap: 12px !important;
     }}
     .cdl-footer-content {{
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 8px !important;
-        font-size: 0.9rem !important;
+        gap: 10px !important;
+        font-size: 0.95rem !important;
         color: {text_secondary} !important;
         flex-wrap: wrap !important;
+        text-align: center !important;
     }}
     .cdl-footer-content strong {{
         color: {text_primary} !important;
     }}
-    .cdl-footer-content a {{
+    .cdl-footer-badge {{
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+        padding: 3px 10px !important;
+        border-radius: 6px !important;
+        background: rgba(232, 93, 4, 0.12) !important;
+        border: 1px solid rgba(232, 93, 4, 0.3) !important;
         color: #E85D04 !important;
         font-weight: 700 !important;
         text-decoration: none !important;
-        border-bottom: 1.5px solid transparent !important;
         transition: all 0.2s ease !important;
     }}
-    .cdl-footer-content a:hover {{
+    .cdl-footer-badge:hover {{
+        background: rgba(232, 93, 4, 0.22) !important;
+        border-color: #E85D04 !important;
+        transform: translateY(-1px) !important;
         color: #FF7A1A !important;
-        border-bottom-color: #FF7A1A !important;
+    }}
+    .cdl-footer-badge svg {{
+        fill: currentColor !important;
+        width: 13px !important;
+        height: 13px !important;
     }}
     .cdl-footer-sub {{
-        font-size: 0.78rem !important;
+        font-size: 0.8rem !important;
         color: {text_muted} !important;
+        text-align: center !important;
     }}
 
     /* ═══════════════════════════════════════════════════════════════════════════════
@@ -1268,28 +1308,32 @@ def get_theme_css(is_dark: bool = True) -> str:
             margin-top: 0.15rem !important;
         }}
 
-        /* Selector de tema en móvil: pastilla compacta, discreta y centrada (NO gigante al 100%) */
+        /* Selector de tema en móvil: micro-píldora compacta, discreta y centrada */
+        html body .stApp div[class*="st-key-theme_mode_selector"],
+        html body .stApp div[class*="theme_mode_selector"],
         html body .stApp [data-testid="stColumn"]:has([class*="theme_mode_selector"]) {{
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
             width: 100% !important;
-            margin: 0 !important;
+            margin: 0.25rem auto 0.5rem auto !important;
             padding: 0 !important;
         }}
 
-        html body .stApp [class*="theme_mode_selector"],
+        html body .stApp div[class*="st-key-theme_mode_selector"] [data-testid="stSegmentedControl"],
+        html body .stApp div[class*="theme_mode_selector"] [data-testid="stSegmentedControl"],
         html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Oscuro"]) {{
-            width: fit-content !important;
-            max-width: 210px !important;
-            margin: 0.15rem auto 0.45rem auto !important;
-            box-sizing: border-box !important;
+            width: auto !important;
+            max-width: 190px !important;
             border-radius: 9999px !important;
             padding: 2px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
         }}
 
-        html body .stApp [class*="theme_mode_selector"] [data-baseweb="button-group"],
-        html body .stApp [class*="theme_mode_selector"] > div {{
+        html body .stApp div[class*="st-key-theme_mode_selector"] [data-baseweb="button-group"],
+        html body .stApp div[class*="theme_mode_selector"] > div,
+        html body .stApp div[class*="theme_mode_selector"] [data-baseweb="button-group"] {{
             width: 100% !important;
             display: flex !important;
             flex-direction: row !important;
@@ -1297,55 +1341,115 @@ def get_theme_css(is_dark: bool = True) -> str:
             gap: 2px !important;
         }}
 
-        html body .stApp [class*="theme_mode_selector"] button {{
+        html body .stApp div[class*="st-key-theme_mode_selector"] button,
+        html body .stApp div[class*="theme_mode_selector"] button {{
             flex: 1 1 auto !important;
             justify-content: center !important;
-            padding: 0.28rem 0.72rem !important;
+            padding: 0.2rem 0.65rem !important;
             font-size: 0.76rem !important;
-            min-height: 32px !important;
-            height: 32px !important;
+            min-height: 30px !important;
+            height: 30px !important;
             line-height: 1 !important;
             border-radius: 9999px !important;
         }}
 
-        /* Cápsula de Modos de Trabajo en móvil (Inspiración Libre / Cita Exacta / Autor) */
-        /* Horizontal con desplazamiento suave, jamás se deforma en óvalo vertical/huevo */
-        html body .stApp [class*="modo_generador_selector"],
-        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]),
-        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiracion"]) {{
+        /* Cápsula de Modos de Flujo en móvil: contenedor vertical con curvatura dinámica adaptativa */
+        html body .stApp div[class*="st-key-modo_generador_selector"] [data-testid="stSegmentedControl"],
+        html body .stApp div[class*="modo_generador_selector"] [data-testid="stSegmentedControl"],
+        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) {{
             width: 100% !important;
             max-width: 100% !important;
-            margin: 0.3rem 0 0.8rem 0 !important;
-            padding: 3px !important;
-            border-radius: 9999px !important;
+            margin: 0.5rem 0 1rem 0 !important;
+            padding: 0 !important;
+            border-radius: 24px !important;
             box-sizing: border-box !important;
-            overflow-x: auto !important;
+            overflow: hidden !important;
+            border: 1.5px solid {seg_border} !important;
+            background-color: {seg_bg} !important;
+            box-shadow: none !important;
         }}
 
-        html body .stApp [class*="modo_generador_selector"] [data-baseweb="button-group"],
-        html body .stApp [class*="modo_generador_selector"] > div,
-        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) [data-baseweb="button-group"],
-        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) > div {{
+        html body .stApp div[class*="st-key-modo_generador_selector"] [data-baseweb="button-group"],
+        html body .stApp div[class*="modo_generador_selector"] [data-baseweb="button-group"],
+        html body .stApp div[class*="modo_generador_selector"] > div {{
             display: flex !important;
-            flex-direction: row !important;
+            flex-direction: column !important;
             flex-wrap: nowrap !important;
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-            scrollbar-width: none !important;
-            gap: 3px !important;
+            gap: 0 !important;
             width: 100% !important;
-            justify-content: flex-start !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border-radius: 24px !important;
+            overflow: hidden !important;
         }}
 
-        html body .stApp [class*="modo_generador_selector"] button,
-        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) button {{
-            flex: 0 0 auto !important;
-            white-space: nowrap !important;
-            padding: 0.36rem 0.82rem !important;
-            font-size: 0.79rem !important;
-            min-height: 34px !important;
-            height: 34px !important;
-            border-radius: 9999px !important;
+        html body .stApp div[class*="st-key-modo_generador_selector"] button,
+        html body .stApp div[class*="modo_generador_selector"] button {{
+            width: 100% !important;
+            min-height: 48px !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            border: none !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            font-size: 0.9rem !important;
+            padding: 0.65rem 1rem !important;
+            box-shadow: none !important;
+            transition: all 0.15s ease !important;
+        }}
+
+        /* Opción 1 (Inspiración Libre): Cuando está activa abraza perfectamente la cúpula superior */
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:first-child[aria-checked="true"],
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:first-of-type[aria-checked="true"],
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:first-child[data-selected],
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:first-of-type[data-selected],
+        html body .stApp div[class*="modo_generador_selector"] button:first-child[aria-checked="true"],
+        html body .stApp div[class*="modo_generador_selector"] button:first-of-type[aria-checked="true"],
+        html body .stApp div[class*="modo_generador_selector"] button:first-child[data-selected],
+        html body .stApp div[class*="modo_generador_selector"] button:first-of-type[data-selected] {{
+            background-color: #E85D04 !important;
+            background: #E85D04 !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            border-top-left-radius: 22px !important;
+            border-top-right-radius: 22px !important;
+            border-bottom-left-radius: 4px !important;
+            border-bottom-right-radius: 4px !important;
+            box-shadow: none !important;
+        }}
+
+        /* Opción 2 (Buscar Cita Exacta): Recta y limpia en el centro */
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:nth-child(2)[aria-checked="true"],
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:nth-child(2)[data-selected],
+        html body .stApp div[class*="modo_generador_selector"] button:nth-child(2)[aria-checked="true"],
+        html body .stApp div[class*="modo_generador_selector"] button:nth-child(2)[data-selected] {{
+            background-color: #E85D04 !important;
+            background: #E85D04 !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            border-radius: 4px !important;
+            box-shadow: none !important;
+        }}
+
+        /* Opción 3 (Explorar Autor): Cuando está activa abraza perfectamente la curvatura inferior */
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:last-child[aria-checked="true"],
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:last-of-type[aria-checked="true"],
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:last-child[data-selected],
+        html body .stApp div[class*="st-key-modo_generador_selector"] button:last-of-type[data-selected],
+        html body .stApp div[class*="modo_generador_selector"] button:last-child[aria-checked="true"],
+        html body .stApp div[class*="modo_generador_selector"] button:last-of-type[aria-checked="true"],
+        html body .stApp div[class*="modo_generador_selector"] button:last-child[data-selected],
+        html body .stApp div[class*="modo_generador_selector"] button:last-of-type[data-selected] {{
+            background-color: #E85D04 !important;
+            background: #E85D04 !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            border-top-left-radius: 4px !important;
+            border-top-right-radius: 4px !important;
+            border-bottom-left-radius: 22px !important;
+            border-bottom-right-radius: 22px !important;
+            box-shadow: none !important;
         }}
 
         /* Jerarquía Tipográfica y Espaciado Compacto en Móvil */
@@ -1399,14 +1503,28 @@ def get_theme_css(is_dark: bool = True) -> str:
             border-radius: 6px 6px 0 0 !important;
         }}
 
-        /* Garantizar visibilidad, interactividad y tamaño táctil de botones y píldoras en móvil */
+        /* Ocultamiento blindado de botones de scroll BaseWeb en móvil */
+        html body .stApp [data-testid="stTabs"] button:not([role="tab"]),
+        html body .stApp [data-testid="stTabs"] [role="button"]:not([role="tab"]),
+        html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"] button:not([role="tab"]),
+        html body .stApp [data-testid="stTabs"] *[class*="ScrollButton"],
+        html body .stApp [data-testid="stTabs"] *[class*="scroll-button"] {{
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            width: 0 !important;
+            height: 0 !important;
+            pointer-events: none !important;
+        }}
+
+        /* Garantizar visibilidad de botones táctiles dentro de las pestañas */
         html body .stApp .stTabs [data-baseweb="tab-panel"] button,
         html body .stApp .stTabs [data-testid="stTabContent"] button,
         html body .stApp .stTabs .stButton,
         html body .stApp .stTabs .stButton button,
         html body .stApp .stTabs [data-testid="stPill"] button,
-        html body .stApp .stTabs button[data-testid="stBaseButton-primary"],
-        html body .stApp .stTabs button[data-testid="stBaseButton-secondary"] {{
+        html body .stApp .stTabs [data-baseweb="tab-panel"] button[data-testid="stBaseButton-primary"],
+        html body .stApp .stTabs [data-baseweb="tab-panel"] button[data-testid="stBaseButton-secondary"] {{
             display: inline-flex !important;
             visibility: visible !important;
             pointer-events: auto !important;
