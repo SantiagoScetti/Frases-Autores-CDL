@@ -443,19 +443,37 @@ def get_theme_css(is_dark: bool = True) -> str:
         font-weight: 700 !important;
     }}
 
-    /* ── Selector de Tema Específico (Header) en Desktop ── */
+    /* ── Selector de Tema Específico (Header) ── */
     html body .stApp [data-testid="stColumn"]:has([class*="theme_mode_selector"]) {{
         display: flex !important;
-        justify-content: flex-end !important;
+        justify-content: center !important;
         align-items: center !important;
+        margin-top: -0.5rem !important;
+        margin-bottom: 0.5rem !important;
     }}
-    html body .stApp [class*="theme_mode_selector"] {{
-        width: fit-content !important;
+    html body .stApp [class*="theme_mode_selector"],
+    html body .stApp [class*="theme_mode_selector"] [data-testid="stSegmentedControl"],
+    html body .stApp [class*="theme_mode_selector"] [data-testid="stSegmentedControl"] > div,
+    html body .stApp [class*="theme_mode_selector"] [data-baseweb="button-group"] {{
+        width: max-content !important;
+        max-width: max-content !important;
+        min-width: 0 !important;
         display: inline-flex !important;
+        margin: 0 auto !important;
+        flex: 0 0 auto !important;
+        justify-content: center !important;
     }}
-    html body .stApp [class*="theme_mode_selector"] [data-testid="stSegmentedControl"] {{
-        width: fit-content !important;
-        max-width: fit-content !important;
+    
+    @media (min-width: 768px) {{
+        html body .stApp [data-testid="stColumn"]:has([class*="theme_mode_selector"]) {{
+            justify-content: flex-end !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }}
+        html body .stApp [class*="theme_mode_selector"],
+        html body .stApp [class*="theme_mode_selector"] [data-testid="stSegmentedControl"] {{
+            margin: 0 0 0 auto !important;
+        }}
     }}
 
     /* ── Cápsula de Modos de Flujo de Trabajo (Inspiración Libre / Cita Exacta / Autor) ── */
@@ -514,8 +532,8 @@ def get_theme_css(is_dark: bool = True) -> str:
         background: transparent !important;
         background-image: none !important;
     }}
-    html body .stApp [data-testid="stTabs"] button:not([role="tab"]),
-    html body .stApp [data-testid="stTabs"] div:has(> button:not([role="tab"])) {{
+    html body .stApp [data-testid="stTabs"] > div:first-child button:not([role="tab"]),
+    html body .stApp [data-testid="stTabs"] > div:first-child div:has(> button:not([role="tab"])) {{
         display: none !important;
         pointer-events: none !important;
     }}
