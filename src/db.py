@@ -187,8 +187,7 @@ def upsert_book_metadata(title: str, author: str, summary: str, topics: str, fil
                 cursor.execute('''
                     INSERT INTO books_metadata (title, author, summary, topics, file_hash, chunk_count)
                     VALUES (%s, %s, %s, %s, %s, %s)
-                    ON CONFLICT(title) DO UPDATE SET
-                        author = EXCLUDED.author,
+                    ON CONFLICT(title, author) DO UPDATE SET
                         summary = EXCLUDED.summary,
                         topics = EXCLUDED.topics,
                         file_hash = EXCLUDED.file_hash,
@@ -198,8 +197,7 @@ def upsert_book_metadata(title: str, author: str, summary: str, topics: str, fil
                 cursor.execute('''
                     INSERT INTO books_metadata (title, author, summary, topics, file_hash, chunk_count)
                     VALUES (?, ?, ?, ?, ?, ?)
-                    ON CONFLICT(title) DO UPDATE SET
-                        author = excluded.author,
+                    ON CONFLICT(title, author) DO UPDATE SET
                         summary = excluded.summary,
                         topics = excluded.topics,
                         file_hash = excluded.file_hash,
@@ -316,4 +314,30 @@ def search_chunks_pgvector(query_embedding: List[float], n_results: int = 3, aut
         return cursor.fetchall()
     finally:
         conn.close()
+
+def upsert_chunks_pgvector(chunks_data: List[Tuple[str, str, str, str, List[float]]]):
+    """Inserta o actualiza fragmentos vectoriales directamente en Neon PostgreSQL (pgvector)."""
+    if not is_postgres() or not chunks_data:
+        return
+    from psycopg2.extras import execute_values
+    conn = get_connection()
+    try:
+        with conn:
+            cursor = conn.cursor()
+            formatted_data = [
+                (c_id, clean_emojis(title), clean_emojis(author), clean_emojis(content), "[" + ",".join(f"{x:.6f}" for x in emb) + "]")
+                for c_id, title, author, content, emb in chunks_data
+            ]
+            execute_values(cursor, """
+                INSERT INTO book_chunks (id, title, author, content, embedding)
+                VALUES %s
+                ON CONFLICT (id) DO UPDATE SET
+                    title = EXCLUDED.title,
+                    author = EXCLUDED.author,
+                    content = EXCLUDED.content,
+                    embedding = EXCLUDED.embedding;
+            """, formatted_data)
+    finally:
+        conn.close()
+
 

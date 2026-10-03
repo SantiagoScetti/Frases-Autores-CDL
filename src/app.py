@@ -197,8 +197,10 @@ MAPA_AUTORES = {
     "Rothbard": "Murray Rothbard",
     "Rothbard Murray": "Murray Rothbard",
     "Rothbard Murray N": "Murray Rothbard",
-    "VVAA": "Varios Autores",
-    "Tannehill Morris y Linda": "Morris y Linda Tannehill"
+    "VVAA": "Robert Wenzel",
+    "Tannehill Morris y Linda": "Morris y Linda Tannehill",
+    "De Jasay Anthony": "Anthony de Jasay",
+    "Chodorov Frank": "Frank Chodorov"
 }
 
 # --- Extraer Metadatos para Filtros con Caché (@st.cache_data) ---

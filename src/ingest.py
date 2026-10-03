@@ -48,6 +48,47 @@ def chunk_text(text: str, max_length: int = 1500):
     )
     return splitter.split_text(text)
 
+def get_manifest_metadata(filename: str) -> Optional[Dict[str, str]]:
+    """Busca si el archivo o título ya tiene metadatos curados en el manifiesto oficial (cero tokens de IA)."""
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    manifest_path = os.path.join(base_dir, "data", "catalog_manifest.json")
+    if not os.path.exists(manifest_path):
+        return None
+    try:
+        import json
+        with open(manifest_path, 'r', encoding='utf-8') as f:
+            catalog = json.load(f)
+        clean = filename.replace('.txt', '').lower()
+        for item in catalog:
+            t = item["title"].lower()
+            old_t = item.get("old_title", "").lower()
+            if t in clean or (old_t and old_t in clean):
+                return item
+    except Exception:
+        pass
+    return None
+
+LIBERAL_TAXONOMY = [
+    "Libertad", "Propiedad Privada", "Libre Mercado", "Sistema de Precios",
+    "Orden Espontáneo", "Praxeología", "Acción Humana", "Cálculo Económico",
+    "Inflación", "Monopolio Estatal", "Banca Libre", "Patrón Oro",
+    "Expolio Legal", "Derechos Naturales", "Gobierno Limitado", "Constitución",
+    "Comercio Internacional", "Ventajas Comparativas", "División del Trabajo",
+    "Cooperación Voluntaria", "Individualismo", "Batalla Cultural"
+]
+
+def extract_topics_heuristic(text: str) -> str:
+    """Extrae palabras clave de la taxonomía liberal sin llamar a ningún LLM (cero tokens)."""
+    lower = text.lower()
+    matches = []
+    for term in LIBERAL_TAXONOMY:
+        count = lower.count(term.lower())
+        if count > 0:
+            matches.append((term, count))
+    matches.sort(key=lambda x: x[1], reverse=True)
+    top_terms = [m[0] for m in matches[:5]]
+    return ", ".join(top_terms) if top_terms else "Libertad, Economía, Filosofía, Sociedad"
+
 def parse_filename_metadata(filename: str) -> Dict[str, str]:
     clean_name = filename.replace('.txt', '').strip()
     if " - " in clean_name:
@@ -59,7 +100,7 @@ def parse_filename_metadata(filename: str) -> Dict[str, str]:
         return {"author": "Varios Autores", "title": clean_name, "category": "General"}
 
 def extract_book_summary(raw_text: str) -> str:
-    """Extrae una muestra representativa del texto para el resumen editorial."""
+    """Extrae una muestra representativa del texto para el resumen editorial sin gastar tokens."""
     texto_limpio = raw_text.replace('\n', ' ').replace('\r', ' ')
     texto_limpio = re.sub(r'\s+', ' ', texto_limpio).strip()
     if len(texto_limpio) > 350:
@@ -90,6 +131,7 @@ def ingest_single_book(
     """
     Ingesta incremental de un único libro.
     Calcula SHA256 para evitar duplicar procesamiento de archivos ya indexados.
+    Soporta inserción directa en Neon pgvector si DATABASE_URL está configurada.
     """
     if not os.path.exists(filepath):
         return {"status": "error", "message": f"El archivo no existe: {filepath}"}
@@ -105,51 +147,83 @@ def ingest_single_book(
             progress_callback(1.0, f"'{file_name}' ya se encuentra indexado.")
         return {"status": "skipped", "message": f"El libro '{file_name}' ya fue indexado previamente.", "file_hash": file_hash}
 
-    meta = parse_filename_metadata(file_name)
-    title = (custom_title or meta["title"]).strip()
-    author = (custom_author or meta["author"]).strip()
-    topics = (custom_topics or "Filosofía, Economía, Libertad, Sociedad").strip()
-
-    if progress_callback:
-        progress_callback(0.1, f"Extrayendo texto de '{title}'...")
-
     raw_text = process_file_content(filepath)
     if not raw_text:
         return {"status": "error", "message": "El archivo de texto está vacío."}
+
+    manifest_item = get_manifest_metadata(file_name)
+    if manifest_item:
+        title = (custom_title or manifest_item["title"]).strip()
+        author = (custom_author or manifest_item["author"]).strip()
+        topics = (custom_topics or manifest_item["topics"]).strip()
+        summary = manifest_item.get("summary") or extract_book_summary(raw_text)
+    else:
+        meta = parse_filename_metadata(file_name)
+        title = (custom_title or meta["title"]).strip()
+        author = (custom_author or meta["author"]).strip()
+        topics = (custom_topics or extract_topics_heuristic(raw_text)).strip()
+        summary = extract_book_summary(raw_text)
+
+    if progress_callback:
+        progress_callback(0.1, f"Extrayendo texto de '{title}'...")
 
     chunks = chunk_text(raw_text, max_length=1500)
     total_chunks = len(chunks)
     if total_chunks == 0:
         return {"status": "error", "message": "No se pudieron generar fragmentos de texto."}
 
-    if progress_callback:
-        progress_callback(0.3, f"Conectando a base vectorial ({total_chunks} fragmentos)...")
-
-    collection = get_chroma_collection()
-
-    summary = extract_book_summary(raw_text)
     book_prefix = hashlib.md5(title.encode('utf-8')).hexdigest()[:8]
-    metadata_item = {"author": author, "title": title, "category": "Biblioteca RAG"}
 
-    batch_size = 100
-    total_batches = (total_chunks + batch_size - 1) // batch_size
-
-    for b_idx in range(total_batches):
-        start = b_idx * batch_size
-        end = min(start + batch_size, total_chunks)
-        batch_chunks = chunks[start:end]
-        batch_ids = [f"{book_prefix}_{str(j + 1).zfill(5)}" for j in range(start, end)]
-        batch_metadatas = [metadata_item for _ in range(len(batch_chunks))]
-
-        collection.upsert(
-            documents=batch_chunks,
-            metadatas=batch_metadatas,
-            ids=batch_ids
-        )
-
+    # Ingesta vectorial: Priorizar Neon PostgreSQL (pgvector) si está disponible
+    if db.is_postgres():
         if progress_callback:
-            pct = 0.3 + 0.6 * ((b_idx + 1) / total_batches)
-            progress_callback(pct, f"Indexando lote {b_idx + 1} de {total_batches}...")
+            progress_callback(0.3, f"Calculando embeddings e indexando en Neon pgvector ({total_chunks} fragmentos)...")
+        
+        local_ef = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
+        batch_size = 150
+        total_batches = (total_chunks + batch_size - 1) // batch_size
+        
+        for b_idx in range(total_batches):
+            start = b_idx * batch_size
+            end = min(start + batch_size, total_chunks)
+            batch_chunks = chunks[start:end]
+            batch_ids = [f"{book_prefix}_{str(j + 1).zfill(5)}" for j in range(start, end)]
+            batch_embeddings = local_ef(batch_chunks)
+            chunks_data = [
+                (batch_ids[i], title, author, batch_chunks[i], list(batch_embeddings[i]))
+                for i in range(len(batch_chunks))
+            ]
+            db.upsert_chunks_pgvector(chunks_data)
+            
+            if progress_callback:
+                pct = 0.3 + 0.65 * ((b_idx + 1) / total_batches)
+                progress_callback(pct, f"Indexando en Neon pgvector (lote {b_idx + 1} de {total_batches})...")
+    else:
+        # Fallback a ChromaDB local
+        if progress_callback:
+            progress_callback(0.3, f"Conectando a base vectorial ChromaDB ({total_chunks} fragmentos)...")
+
+        collection = get_chroma_collection()
+        metadata_item = {"author": author, "title": title, "category": "Biblioteca RAG"}
+        batch_size = 100
+        total_batches = (total_chunks + batch_size - 1) // batch_size
+
+        for b_idx in range(total_batches):
+            start = b_idx * batch_size
+            end = min(start + batch_size, total_chunks)
+            batch_chunks = chunks[start:end]
+            batch_ids = [f"{book_prefix}_{str(j + 1).zfill(5)}" for j in range(start, end)]
+            batch_metadatas = [metadata_item for _ in range(len(batch_chunks))]
+
+            collection.upsert(
+                documents=batch_chunks,
+                metadatas=batch_metadatas,
+                ids=batch_ids
+            )
+
+            if progress_callback:
+                pct = 0.3 + 0.6 * ((b_idx + 1) / total_batches)
+                progress_callback(pct, f"Indexando lote {b_idx + 1} de {total_batches}...")
 
     # Guardar metadatos en base relacional (Postgres o SQLite)
     db.upsert_book_metadata(title, author, summary, topics, file_hash=file_hash, chunk_count=total_chunks)

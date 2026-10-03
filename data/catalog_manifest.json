@@ -1,0 +1,218 @@
+[
+  {
+    "author": "Adam Smith",
+    "title": "La Riqueza de las Naciones",
+    "old_title": "La Riqueza de las Naciones",
+    "old_author": "Adam Smith",
+    "topics": "División del Trabajo, Mano Invisible, Libre Comercio, Acumulación de Capital, Salarios y Precios",
+    "summary": "Obra fundacional de la economía política moderna. Adam Smith explica cómo la división del trabajo incrementa la productividad y cómo la cooperación libre a través del mercado coordina la actividad económica sin necesidad de un planificador central."
+  },
+  {
+    "author": "Adam Smith",
+    "title": "Teoría de los Sentimientos Morales",
+    "old_title": "Teoria de los Sentimientos Morales",
+    "old_author": "Adam Smith",
+    "topics": "Simpatía, Espectador Imparcial, Justicia, Virtud, Prudencia, Moral Social",
+    "summary": "Tratado filosófico y ético de Adam Smith que analiza los fundamentos de la moral humana, la simpatía social y el concepto del 'espectador imparcial' como guía de la conciencia y la conducta justa en una sociedad libre."
+  },
+  {
+    "author": "Ludwig von Mises",
+    "title": "La Acción Humana",
+    "old_title": "La Acción Humana",
+    "old_author": "Ludwig von Mises",
+    "topics": "Praxeología, Acción Humana, Cálculo Económico, Mercado, Dinero, Crítica al Socialismo",
+    "summary": "La obra cumbre de la Escuela Austríaca de Economía. Mises fundamenta la economía en la praxeología (el estudio de la acción humana con propósito) y demuestra la imposibilidad del cálculo económico en el socialismo."
+  },
+  {
+    "author": "Ludwig von Mises",
+    "title": "El Socialismo",
+    "old_title": "El Socialismo",
+    "old_author": "Ludwig von Mises",
+    "topics": "Imposibilidad del Cálculo Económico, Propiedad Privada, Coerción Estatal, Planificación Central",
+    "summary": "Análisis sociológico y económico exhaustivo donde Mises demuestra teóricamente por qué el socialismo está condenado al colapso debido a la abolición de la propiedad privada sobre los medios de producción y la desaparición del sistema de precios."
+  },
+  {
+    "author": "Ludwig von Mises",
+    "title": "Nación, estado y economía",
+    "old_title": "Nación, estado y economía",
+    "old_author": "Mises",
+    "topics": "Imperialismo, Autodeterminación, Libre Comercio, Liberalismo Clásico, Paz Internacional",
+    "summary": "Escrito tras la Primera Guerra Mundial, Mises examina el auge del nacionalismo, el imperialismo y el socialismo, abogando por la autodeterminación individual y el libre comercio internacional como únicos garantes de la paz."
+  },
+  {
+    "author": "Murray Rothbard",
+    "title": "Anatomía del Estado",
+    "old_title": "Anatomía del Estado",
+    "old_author": "Rothbard Murray N",
+    "topics": "Coerción, Expoliación Fiscal, Castas Políticas, Monopolio de la Fuerza, Guerra",
+    "summary": "Ensayo clásico donde Rothbard desmitifica el Estado, definiéndolo como la única organización social que obtiene sus ingresos no mediante el intercambio voluntario o la producción, sino mediante la coerción legalizada: el cobro compulsivo de tributos."
+  },
+  {
+    "author": "Murray Rothbard",
+    "title": "¿Qué ha hecho el gobierno con nuestro dinero?",
+    "old_title": "Que le hizo el Gobierno a nuestro Dinero",
+    "old_author": "Rothbard Murray",
+    "topics": "Dinero Mercancía, Patrón Oro, Inflación, Banca con Reserva Fraccionaria, Monopolio Monetario",
+    "summary": "Breve y magistral explicación del origen del dinero en el mercado libre, la degeneración estatal hacia el monopolio fiduciario y cómo la emisión inflacionaria enriquece al poder político a expensas de la sociedad productiva."
+  },
+  {
+    "author": "Murray Rothbard",
+    "title": "El Hombre, la economía y el Estado Vol 1",
+    "old_title": "El Hombre, la economía y el Estado Vol 1",
+    "old_author": "Rothbard",
+    "topics": "Acción Humana, Utilidad Marginal, Producción, Precios de Consumo, Formación de Capital",
+    "summary": "Primer tomo del monumental tratado económico de Rothbard que reconstruye paso a paso la economía desde la acción humana individual hasta la formación de precios y estructuras de producción en un mercado no intervenido."
+  },
+  {
+    "author": "Murray Rothbard",
+    "title": "El Hombre, la economía y el Estado Vol 2",
+    "old_title": "El Hombre, la economía y el Estado Vol 2",
+    "old_author": "Rothbard",
+    "topics": "Monopolio, Intervención Estatal, Tributación, Dinero y Crédito, Economía del Bienestar",
+    "summary": "Segundo tomo centrado en el análisis riguroso de la intervención estatal en el mercado, demostrando los efectos destructivos de los impuestos, regulaciones, privilegios monopólicos y expansión crediticia."
+  },
+  {
+    "author": "Murray Rothbard",
+    "title": "Lo esencial de Mises",
+    "old_title": "Lo esencial",
+    "old_author": "Ludwig von Mises",
+    "topics": "Biografía Intelectual, Escuela Austríaca, Praxeología, Metodología Económica",
+    "summary": "Guía introductoria y homenaje de Rothbard a la vida, metodología y aportes esenciales de Ludwig von Mises, ideal para comprender el núcleo del pensamiento austríaco de forma concisa."
+  },
+  {
+    "author": "Frederic Bastiat",
+    "title": "La Ley",
+    "old_title": "La Ley",
+    "old_author": "Frederic Bastiat",
+    "topics": "Expolio Legal, Derechos Naturales, Justicia, Gobierno Limitado, Libertad Individual",
+    "summary": "Manifiesto fundamental de la filosofía jurídica liberal. Bastiat argumenta que la ley legítima es la defensa colectiva de la persona, la libertad y la propiedad privada, y denuncia su perversión cuando se transforma en un instrumento de expoliación legal."
+  },
+  {
+    "author": "Friedrich Hayek",
+    "title": "El Uso del conocimiento en la sociedad",
+    "old_title": "El Uso del conocimiento",
+    "old_author": "Friedrich Hayek",
+    "topics": "Conocimiento Disperso, Sistema de Precios, Orden Espontáneo, Planificación Central",
+    "summary": "Ensayo señero publicado en la American Economic Review. Hayek explica cómo el sistema de precios actúa como un mecanismo de transmisión de información descentralizada que ningún comité centralizador podría jamás recopilar ni procesar."
+  },
+  {
+    "author": "John Locke",
+    "title": "Segundo Tratado sobre el Gobierno Civil",
+    "old_title": "Segundo Tratado sobre el Gobierno Civil",
+    "old_author": "John Locke",
+    "topics": "Derechos Naturales, Propiedad, Consentimiento, Estado de Naturaleza, Límites del Gobierno",
+    "summary": "Piedra angular del liberalismo político y constitucionalismo moderno. Locke formula la teoría de los derechos inalienables a la vida, la libertad y la propiedad, y establece los límites estrictos del poder gobernante."
+  },
+  {
+    "author": "John Locke",
+    "title": "Ensayo sobre el entendimiento humano Vol 1",
+    "old_title": "Ensayo sobre el entendimiento humano Vol 1",
+    "old_author": "John Locke",
+    "topics": "Epistemología, Empirismo, Ideas Simples, Crítica a las Ideas Innatas, Percepción",
+    "summary": "Obra cumbre del empirismo filosófico. Locke refuta la existencia de ideas innatas y propone que la mente humana es una tábula rasa cuyo conocimiento proviene exclusivamente de la experiencia sensorial y la reflexión."
+  },
+  {
+    "author": "John Locke",
+    "title": "Ensayo sobre el entendimiento humano Vol 2",
+    "old_title": "Ensayo sobre el entendimiento humano Vol 2",
+    "old_author": "John Locke",
+    "topics": "Lenguaje, Naturaleza del Conocimiento, Juicio, Razón y Probabilidad",
+    "summary": "Continuación del examen de Locke sobre las facultades cognitivas humanas, los límites del entendimiento, el uso y abuso del lenguaje y la distinción entre conocimiento cierto y mera probabilidad."
+  },
+  {
+    "author": "John Stuart Mill",
+    "title": "Sobre la Libertad",
+    "old_title": "Sobre la Libertad",
+    "old_author": "John Stuart Mill",
+    "topics": "Principio del Daño, Libertad de Expresión, Tiranía de la Mayoría, Individualidad, Tolerancia",
+    "summary": "Defensa apasionada de la libertad individual frente a la interferencia estatal y el conformismo social. Mill postula que el único fin por el cual es justificable limitar la libertad de un miembro de una comunidad es para evitar daño a terceros."
+  },
+  {
+    "author": "John Stuart Mill",
+    "title": "El Utilitarismo",
+    "old_title": "El Utilitarismo",
+    "old_author": "John Stuart Mill",
+    "topics": "Principio de Mayor Felicidad, Moralidad, Placeres Cualitativos, Justicia y Utilidad",
+    "summary": "Exposición de la ética utilitarista reformulada por Mill, introduciendo distinciones cualitativas entre los placeres intelectuales y corporales, y su vinculación con los deberes de justicia."
+  },
+  {
+    "author": "John Stuart Mill",
+    "title": "El Socialismo",
+    "old_title": "El Socialismo",
+    "old_author": "John Stuart Mill",
+    "topics": "Propiedad y Trabajo, Crítica a las Utopías Colectivistas, Competencia e Incentivos",
+    "summary": "Ensayos críticos y capítulos póstumos donde Mill evalúa las propuestas socialistas de su época, sopesando las objeciones sobre los incentivos al trabajo, la libertad individual y los peligros del monopolio estatal."
+  },
+  {
+    "author": "David Ricardo",
+    "title": "Principios de Economía Política",
+    "old_title": "Principios de Economia Politica",
+    "old_author": "David Ricardo",
+    "topics": "Ventajas Comparativas, Teoría del Valor, Renta de la Tierra, Comercio Internacional, Salarios",
+    "summary": "Texto clásico del pensamiento económico donde Ricardo introduce la trascendental teoría de las ventajas comparativas en el comercio internacional y la teoría de la renta diferencial de la tierra."
+  },
+  {
+    "author": "Lysander Spooner",
+    "title": "Sin Traición",
+    "old_title": "Sin Traición",
+    "old_author": "Lysander Spooner",
+    "topics": "Anarquismo Individualista, Crítica a la Constitución, Consentimiento Voluntario, Estado de Derecho",
+    "summary": "Vigoroso alegato jurídico y filosófico del anarquismo individualista norteamericano. Spooner demuestra que una constitución política carece de validez moral sobre aquellos individuos que no han prestado su consentimiento explícito e individual."
+  },
+  {
+    "author": "Anthony de Jasay",
+    "title": "El Estado",
+    "old_title": "El estado",
+    "old_author": "De Jasay Anthony",
+    "topics": "Lógica del Poder, Estado Plantador, Redistribución, Democracia y Consentimiento, Propiedad",
+    "summary": "Análisis implacable de la naturaleza del Estado como un actor autónomo con sus propios intereses de maximización de poder, demostrando que la redistribución es el mecanismo estatal para comprar apoyos y expandir su dominación."
+  },
+  {
+    "author": "Morris y Linda Tannehill",
+    "title": "El mercado para la libertad",
+    "old_title": "El mercado para la libertad",
+    "old_author": "Tannehill Morris y Linda",
+    "topics": "Sociedad de Laissez-Faire, Seguridad Privada, Justicia de Mercado, Abolición del Estado, Contratos",
+    "summary": "Texto pionero del anarcocapitalismo moderno. Los Tannehill demuestran con claridad lógica cómo la seguridad, los contratos, los tribunales y la defensa pueden ser provistos eficientemente mediante empresas e instituciones voluntarias en un mercado libre."
+  },
+  {
+    "author": "Frank Chodorov",
+    "title": "Los Impuestos son un Robo",
+    "old_title": "Los Impuestos son un Robo",
+    "old_author": "Chodorov Frank",
+    "topics": "Impuesto sobre la Renta, Libertad Económica, Soberanía Individual, Crítica Fiscal, Propiedad",
+    "summary": "Ensayo incendiario del pensador de la Old Right estadounidense. Chodorov argumenta que el impuesto sobre la renta ataca la raíz misma de la propiedad privada y convierte al individuo en un siervo del aparato gubernamental."
+  },
+  {
+    "author": "Johan Norberg",
+    "title": "En defensa del Capitalismo Global",
+    "old_title": "En defensa del Capitalismo Global",
+    "old_author": "Desconocido",
+    "topics": "Globalización, Reducción de la Pobreza, Libre Comercio, Progreso Humano, Innovación",
+    "summary": "Obra de divulgación empírica fundamental que demuestra con datos de todo el mundo cómo la apertura económica, el libre comercio y los derechos de propiedad han sido los mayores motores para erradicar la pobreza y mejorar la calidad de vida humana."
+  },
+  {
+    "author": "Nicolás Márquez y Agustín Laje",
+    "title": "El Libro Negro de la Nueva Izquierda",
+    "old_title": "La neo Izquierda",
+    "old_author": "Desconocido",
+    "topics": "Batalla Cultural, Ideología de Género, Marxismo Cultural, Libertad y Familia, Política",
+    "summary": "Ensayo de amplia difusión en el mundo hispanoamericano que analiza la mutación ideológica de la izquierda tras la caída del Muro de Berlín, el paso de la lucha de clases a las guerras de identidad y las consecuencias políticas para las libertades civiles."
+  },
+  {
+    "author": "Roger Garrison",
+    "title": "Tiempo y Dinero",
+    "old_title": "Tiempo y Dinero",
+    "old_author": "Desconocido",
+    "topics": "Macroeconomía de la Estructura de Capital, Ciclos Económicos, Tasa de Interés, Teoría Austríaca",
+    "summary": "Exposición gráfica y analítica de la macroeconomía austríaca del capital frente al monetarismo y el keynesianismo. Garrison ilustra la estructura intertemporal de la producción y cómo la manipulación de la tasa de interés distorsiona las decisiones de inversión."
+  },
+  {
+    "author": "Robert Wenzel",
+    "title": "Libertario en 30 días",
+    "old_title": "Libertario en 30 días",
+    "old_author": "VVAA",
+    "topics": "Introducción al Libertarismo, Principio de No Agresión, Escuela Austríaca, Instituciones Libres",
+    "summary": "Guía ágil y pedagógica diseñada para que cualquier lector comprenda en un mes los fundamentos morales, económicos y filosóficos de la libertad individual, la no agresión y la cooperación voluntaria."
+  }
+]
