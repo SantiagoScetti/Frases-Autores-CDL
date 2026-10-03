@@ -14,6 +14,7 @@ import re
 import html
 import base64
 import streamlit as st
+import streamlit.components.v1 as components
 import chromadb
 from chromadb.utils import embedding_functions
 from google import genai
@@ -129,6 +130,47 @@ def render_post_card_content(topic, tone, content, created_at):
     else:
         preview = clean_emojis(content)[:160]
         st.markdown(f'<div class="editorial-quote">“{html.escape(preview)}...”</div>', unsafe_allow_html=True)
+
+def scroll_to_element(element_id: str = "resultado-generacion"):
+    """Inyecta un micro-script en el DOM para desplazar suavemente la vista y centrar el contenido generado."""
+    components.html(
+        f"""
+        <script>
+            setTimeout(function() {{
+                var el = window.parent.document.getElementById('{element_id}');
+                if (el) {{
+                    el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                }}
+            }}, 120);
+        </script>
+        """,
+        height=0,
+        width=0,
+    )
+
+def render_skeleton_loader(status_text: str = "Buscando en la biblioteca y redactando propuesta editorial con IA..."):
+    """Renderiza un skeleton loader editorial con efecto de brillo metálico/naranja y spinner de anillo."""
+    return f"""
+    <div class="skeleton-card" id="resultado-generacion">
+        <div class="skeleton-header-row">
+            <div class="skeleton-shimmer skeleton-circle"></div>
+            <div class="skeleton-col">
+                <div class="skeleton-shimmer skeleton-line-title"></div>
+                <div class="skeleton-shimmer skeleton-line-subtitle"></div>
+            </div>
+        </div>
+        <div class="skeleton-quote-box">
+            <div class="skeleton-shimmer skeleton-quote-line w-90"></div>
+            <div class="skeleton-shimmer skeleton-quote-line w-100"></div>
+            <div class="skeleton-shimmer skeleton-quote-line w-75"></div>
+            <div class="skeleton-shimmer skeleton-quote-line w-40"></div>
+        </div>
+        <div class="skeleton-footer-status">
+            <div class="skeleton-spinner-ring"></div>
+            <span class="skeleton-status-text">{html.escape(status_text)}</span>
+        </div>
+    </div>
+    """
 
 # --- Rutas de Assets y Branding Oficial ---
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -514,113 +556,120 @@ with tab_frases:
     dispo_texto = "Disponible en la Biblioteca del Club de la Libertad."
 
     if btn_extraer:
-        with st.spinner("Extrayendo citas del libro..."):
-            st.session_state.frase_rapida_generada = None
-            default_core = CONCEPTOS_AUTOR_DEFAULT.get(autor_frase, "principios de la libertad individuo cooperacion social mercado")
-            search_query = tema_frase or default_core
-            where_c = None
-            if libro_frase != "Todos":
-                where_c = {"title": libro_frase}
-            elif autor_frase != "Todos":
-                aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
-                where_c = {"author": {"$in": aliases}}
+        ph_load_f = st.empty()
+        ph_load_f.markdown(render_skeleton_loader("Extrayendo citas directas del catálogo..."), unsafe_allow_html=True)
+        scroll_to_element("resultado-generacion")
+
+        st.session_state.frase_rapida_generada = None
+        default_core = CONCEPTOS_AUTOR_DEFAULT.get(autor_frase, "principios de la libertad individuo cooperacion social mercado")
+        search_query = tema_frase or default_core
+        where_c = None
+        if libro_frase != "Todos":
+            where_c = {"title": libro_frase}
+        elif autor_frase != "Todos":
+            aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
+            where_c = {"author": {"$in": aliases}}
+        
+        kwargs = {"query_texts": [search_query], "n_results": 25}
+        if where_c: kwargs["where"] = where_c
+        
+        res = collection.query(**kwargs)
+        if res['documents'] and len(res['documents'][0]):
+            docs = res['documents'][0]
+            metas = res['metadatas'][0]
             
-            kwargs = {"query_texts": [search_query], "n_results": 25}
-            if where_c: kwargs["where"] = where_c
-            
-            res = collection.query(**kwargs)
-            if res['documents'] and len(res['documents'][0]):
-                docs = res['documents'][0]
-                metas = res['metadatas'][0]
+            # Filtrar fragmentos bibliográficos o de prólogo
+            limpios = [(docs[i], metas[i] if i < len(metas) else {}) for i in range(len(docs)) if not es_chunk_bibliografico(docs[i])]
+            if not limpios:
+                limpios = [(docs[i], metas[i] if i < len(metas) else {}) for i in range(len(docs))]
                 
-                # Filtrar fragmentos bibliográficos o de prólogo
-                limpios = [(docs[i], metas[i] if i < len(metas) else {}) for i in range(len(docs)) if not es_chunk_bibliografico(docs[i])]
-                if not limpios:
-                    limpios = [(docs[i], metas[i] if i < len(metas) else {}) for i in range(len(docs))]
-                    
-                random.shuffle(limpios)
-                limpios = limpios[:4]
-                st.session_state.citas_crudas = [c[0] for c in limpios]
-                st.session_state.citas_crudas_meta = [c[1] for c in limpios]
-            else:
-                st.warning("No se encontraron citas con esos parámetros.")
+            random.shuffle(limpios)
+            limpios = limpios[:4]
+            st.session_state.citas_crudas = [c[0] for c in limpios]
+            st.session_state.citas_crudas_meta = [c[1] for c in limpios]
+        else:
+            st.warning("No se encontraron citas con esos parámetros.")
+        ph_load_f.empty()
 
     if btn_generar:
-        with st.spinner("Buscando en la biblioteca y generando redacción editorial..."):
-            st.session_state.citas_crudas = None
+        ph_load_f = st.empty()
+        ph_load_f.markdown(render_skeleton_loader("Buscando en la biblioteca y redactando propuesta editorial con IA..."), unsafe_allow_html=True)
+        scroll_to_element("resultado-generacion")
+
+        st.session_state.citas_crudas = None
+        
+        # Enriquecimiento semántico inteligente para evitar caer en índices o prólogos
+        default_core = CONCEPTOS_AUTOR_DEFAULT.get(autor_frase, "principios de la libertad individuo cooperacion social mercado")
+        search_query = fecha_efemeride or tema_frase or default_core
             
-            # Enriquecimiento semántico inteligente para evitar caer en índices o prólogos
-            default_core = CONCEPTOS_AUTOR_DEFAULT.get(autor_frase, "principios de la libertad individuo cooperacion social mercado")
-            search_query = fecha_efemeride or tema_frase or default_core
+        where_c = None
+        if libro_frase != "Todos":
+            where_c = {"title": libro_frase}
+        elif autor_frase != "Todos":
+            aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
+            where_c = {"author": {"$in": aliases}}
+
+        kwargs = {"query_texts": [search_query], "n_results": max(15, n_variaciones * 5)}
+        if where_c:
+            kwargs["where"] = where_c
+
+        results = collection.query(**kwargs)
+
+        fragmentos_seleccionados = []
+        meta_base = {}
+        if results['documents'] and len(results['documents'][0]):
+            docs = results['documents'][0]
+            metas = results['metadatas'][0]
             
-            where_c = None
-            if libro_frase != "Todos":
-                where_c = {"title": libro_frase}
-            elif autor_frase != "Todos":
-                aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_frase] + [autor_frase]
-                where_c = {"author": {"$in": aliases}}
-
-            kwargs = {"query_texts": [search_query], "n_results": max(15, n_variaciones * 5)}
-            if where_c:
-                kwargs["where"] = where_c
-
-            results = collection.query(**kwargs)
-
-            fragmentos_seleccionados = []
-            meta_base = {}
-            if results['documents'] and len(results['documents'][0]):
-                docs = results['documents'][0]
-                metas = results['metadatas'][0]
-                
-                # Filtrar fragmentos puramente bibliográficos o de traductores
-                candidatos = []
-                for idx, doc_text in enumerate(docs):
-                    if not es_chunk_bibliografico(doc_text):
-                        candidatos.append((doc_text, metas[idx] if idx < len(metas) else {}))
-                
-                # Si todos fueran descartados, fallback a docs originales
-                if not candidatos:
-                    candidatos = [(docs[i], metas[i] if i < len(metas) else {}) for i in range(len(docs))]
-
-                random.shuffle(candidatos)
-                seleccionados = candidatos[:n_variaciones]
-                fragmentos_seleccionados = [c[0] for c in seleccionados]
-                meta_base = seleccionados[0][1] if seleccionados else {}
+            # Filtrar fragmentos puramente bibliográficos o de traductores
+            candidatos = []
+            for idx, doc_text in enumerate(docs):
+                if not es_chunk_bibliografico(doc_text):
+                    candidatos.append((doc_text, metas[idx] if idx < len(metas) else {}))
             
-            fragmentos_texto = "\n\n---\n\n".join([f"Fragmento de Referencia {i+1}:\n\"{f}\"" for i, f in enumerate(fragmentos_seleccionados)])
+            # Si todos fueran descartados, fallback a docs originales
+            if not candidatos:
+                candidatos = [(docs[i], metas[i] if i < len(metas) else {}) for i in range(len(docs))]
 
-            autor_real = meta_base.get("author", autor_frase if autor_frase != "Todos" else "Autor clásico")
-            libro_real = meta_base.get("title", "")
+            random.shuffle(candidatos)
+            seleccionados = candidatos[:n_variaciones]
+            fragmentos_seleccionados = [c[0] for c in seleccionados]
+            meta_base = seleccionados[0][1] if seleccionados else {}
+        
+        fragmentos_texto = "\n\n---\n\n".join([f"Fragmento de Referencia {i+1}:\n\"{f}\"" for i, f in enumerate(fragmentos_seleccionados)])
 
-            instruccion_vars = f"\n\nATENCIÓN: Genera {n_variaciones} opciones DISTINTAS para este posteo. Numéralas como 'Opción 1', 'Opción 2', etc. y sepáralas con una línea divisoria (---)." if n_variaciones > 1 else ""
+        autor_real = meta_base.get("author", autor_frase if autor_frase != "Todos" else "Autor clásico")
+        libro_real = meta_base.get("title", "")
 
-            # Regla de cita según el modo seleccionado por el usuario
-            if tipo_cita == "Cita Textual Directa (del libro)":
-                regla_cita_formato = (
-                    "1. Una cita destacada del autor: **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>`) y entrecomillada. "
-                    "REGLA DE IDIOMA CRÍTICA: La cita DEBE ESTAR OBLIGATORIAMENTE EN ESPAÑOL. "
-                    "Si el fragmento de referencia original está en inglés u otro idioma (como en obras de Adam Smith, Locke, Mill, etc.), "
-                    "TRADÚCELO AL ESPAÑOL con máxima fidelidad conceptual, elegancia literaria y exactitud filosófica (NUNCA dejes la cita en inglés en el borrador). "
-                    "Si el texto original ya está en español, conserva la cita literal del autor.** "
-                    "Si generás varias opciones, selecciona una frase distinta de cada fragmento."
-                )
-            else:
-                regla_cita_formato = (
-                    "1. Una frase o reflexión impactante del autor (máximo 2 oraciones). "
-                    "**DEBE estar OBLIGATORIAMENTE EN ESPAÑOL y formateada como un blockquote de Markdown (usando el símbolo `>` al principio de la línea). "
-                    "Si el fragmento original está en inglés, tradúcelo y sintetízalo fielmente al español.**"
-                )
+        instruccion_vars = f"\n\nATENCIÓN: Genera {n_variaciones} opciones DISTINTAS para este posteo. Numéralas como 'Opción 1', 'Opción 2', etc. y sepáralas con una línea divisoria (---)." if n_variaciones > 1 else ""
 
-            idioma_regla = (
-                "\n\nREGLA DE IDIOMA MANDATORIA:\n"
-                "Todo el contenido generado para la publicación (cita entrecomillada, firma, caption/explicación y aviso) "
-                "DEBE ESTAR 100% EN ESPAÑOL. Si el libro de base está en inglés, traduce la cita al español de forma impecable y natural. "
-                "Bajo ninguna circunstancia dejes texto en inglés en el borrador."
+        # Regla de cita según el modo seleccionado por el usuario
+        if tipo_cita == "Cita Textual Directa (del libro)":
+            regla_cita_formato = (
+                "1. Una cita destacada del autor: **DEBE estar formateada como un blockquote de Markdown (usando el símbolo `>`) y entrecomillada. "
+                "REGLA DE IDIOMA CRÍTICA: La cita DEBE ESTAR OBLIGATORIAMENTE EN ESPAÑOL. "
+                "Si el fragmento de referencia original está en inglés u otro idioma (como en obras de Adam Smith, Locke, Mill, etc.), "
+                "TRADÚCELO AL ESPAÑOL con máxima fidelidad conceptual, elegancia literaria y exactitud filosófica (NUNCA dejes la cita en inglés en el borrador). "
+                "Si el texto original ya está en español, conserva la cita literal del autor.** "
+                "Si generás varias opciones, selecciona una frase distinta de cada fragmento."
+            )
+        else:
+            regla_cita_formato = (
+                "1. Una frase o reflexión impactante del autor (máximo 2 oraciones). "
+                "**DEBE estar OBLIGATORIAMENTE EN ESPAÑOL y formateada como un blockquote de Markdown (usando el símbolo `>` al principio de la línea). "
+                "Si el fragmento original está en inglés, tradúcelo y sintetízalo fielmente al español.**"
             )
 
-            # ── Prompts editoriales según tipo ──
-            if tipo_frase == "Frase inspiradora":
-                prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
+        idioma_regla = (
+            "\n\nREGLA DE IDIOMA MANDATORIA:\n"
+            "Todo el contenido generado para la publicación (cita entrecomillada, firma, caption/explicación y aviso) "
+            "DEBE ESTAR 100% EN ESPAÑOL. Si el libro de base está en inglés, traduce la cita al español de forma impecable y natural. "
+            "Bajo ninguna circunstancia dejes texto en inglés en el borrador."
+        )
+
+        # ── Prompts editoriales según tipo ──
+        if tipo_frase == "Frase inspiradora":
+            prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
 
 Tu tarea es crear una publicación CORTA para Instagram Stories o feed, al estilo de las cuentas de alto nivel que publican citas de pensadores clásicos liberales.
 
@@ -637,8 +686,8 @@ Tema: {tema_frase or 'libertad, ideas liberales'}
 
 REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS bajo cualquier circunstancia. Mantén un estilo sobrio, periodístico y formal.{idioma_regla}{instruccion_vars}"""
 
-            elif tipo_frase == "Efeméride / Fecha histórica":
-                prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
+        elif tipo_frase == "Efeméride / Fecha histórica":
+            prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
 
 Tu tarea es crear una publicación para Instagram sobre la efeméride: "{fecha_efemeride}".
 
@@ -654,8 +703,8 @@ Fragmentos de referencia del autor en la biblioteca:
 
 REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Estilo editorial sobrio y clásico.{idioma_regla}{instruccion_vars}"""
 
-            else:  # Recomendación de libro
-                prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
+        else:  # Recomendación de libro
+            prompt = f"""Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
 
 Tu tarea es crear una publicación CORTA para Instagram recomendando el libro '{libro_real}' de {autor_real}.
 
@@ -670,26 +719,29 @@ Fragmentos de referencia del libro:
 
 REGLA ESTRICTA: PROHIBIDO EL USO DE EMOJIS. Tono riguroso, intelectual y directo. Sin hashtags.{idioma_regla}{instruccion_vars}"""
 
-            resultado = generar_respuesta(prompt)
-            if resultado:
-                if incluir_cta:
-                    cta_text = "\n\n---\n**Texto sugerido para Story CTA:**\n¿Te interesa profundizar en estas ideas? Conseguí este y otros libros en la Biblioteca del Club de la Libertad.\nMandanos un mensaje directo para más información."
-                    resultado += cta_text
-                st.session_state.frase_rapida_generada = clean_emojis(resultado)
-                st.session_state.frase_rapida_original = fragmentos_texto
-                
-                # Auto-completar los datos para la placa gráfica sin fricción
-                q_parsed, a_parsed = extract_quote_preview(resultado)
-                if q_parsed:
-                    st.session_state.placa_frase_txt = q_parsed
-                if a_parsed:
-                    st.session_state.placa_frase_autor = a_parsed
-                else:
-                    st.session_state.placa_frase_autor = autor_real
+        resultado = generar_respuesta(prompt)
+        if resultado:
+            if incluir_cta:
+                cta_text = "\n\n---\n**Texto sugerido para Story CTA:**\n¿Te interesa profundizar en estas ideas? Conseguí este y otros libros en la Biblioteca del Club de la Libertad.\nMandanos un mensaje directo para más información."
+                resultado += cta_text
+            st.session_state.frase_rapida_generada = clean_emojis(resultado)
+            st.session_state.frase_rapida_original = fragmentos_texto
+            
+            # Auto-completar los datos para la placa gráfica sin fricción
+            q_parsed, a_parsed = extract_quote_preview(resultado)
+            if q_parsed:
+                st.session_state.placa_frase_txt = q_parsed
+            if a_parsed:
+                st.session_state.placa_frase_autor = a_parsed
+            else:
+                st.session_state.placa_frase_autor = autor_real
+        ph_load_f.empty()
 
     # ── Mostrar resultado IA ──
     if st.session_state.frase_rapida_generada:
         st.divider()
+        st.markdown('<div id="resultado-final-frase"></div>', unsafe_allow_html=True)
+        scroll_to_element("resultado-final-frase")
         st.markdown("### :material/history_edu: Borrador Generado")
         with st.container(key="card_result_f", border=True):
             st.markdown(st.session_state.frase_rapida_generada)
@@ -807,6 +859,7 @@ with tab_generador:
         "Flujo de trabajo",
         [":material/lightbulb: Inspiración Libre", ":material/search: Buscar Cita Exacta", ":material/person_search: Explorar Autor"],
         default=":material/lightbulb: Inspiración Libre",
+        key="modo_generador_selector",
         label_visibility="collapsed"
     )
     st.divider()
@@ -838,36 +891,38 @@ with tab_generador:
                     if not tema:
                         st.warning("Por favor ingresá un tema primero.")
                     else:
-                        with st.spinner("Buscando en la base de datos de textos clásicos..."):
-                            where_clause = None
-                            if libro_seleccionado != "Todos":
-                                where_clause = {"title": libro_seleccionado}
-                            elif autor_seleccionado != "Todos":
-                                aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_seleccionado] + [autor_seleccionado]
-                                where_clause = {"author": {"$in": aliases}}
+                        ph_load_g = st.empty()
+                        ph_load_g.markdown(render_skeleton_loader("Buscando en la biblioteca y redactando posteo editorial con IA..."), unsafe_allow_html=True)
+                        scroll_to_element("resultado-generacion")
 
-                            kwargs = {"query_texts": [tema], "n_results": 3}
-                            if where_clause:
-                                kwargs["where"] = where_clause
+                        where_clause = None
+                        if libro_seleccionado != "Todos":
+                            where_clause = {"title": libro_seleccionado}
+                        elif autor_seleccionado != "Todos":
+                            aliases = [k for k, v in MAPA_AUTORES.items() if v == autor_seleccionado] + [autor_seleccionado]
+                            where_clause = {"author": {"$in": aliases}}
 
-                            results = collection.query(**kwargs)
+                        kwargs = {"query_texts": [tema], "n_results": 3}
+                        if where_clause:
+                            kwargs["where"] = where_clause
 
-                            if not results['documents'] or not len(results['documents'][0]):
-                                st.error("No se encontraron fragmentos con estos filtros. Probá ampliando la búsqueda.")
-                            else:
-                                fragmentos = results['documents'][0]
-                                metadatos = results['metadatas'][0]
+                        results = collection.query(**kwargs)
 
-                                contexto_text = ""
-                                for i in range(len(fragmentos)):
-                                    autor = metadatos[i].get("author", "Desconocido")
-                                    titulo = metadatos[i].get("title", "Desconocido")
-                                    contexto_text += f"\n- Fragmento de {autor} en '{titulo}':\n\"{fragmentos[i]}\"\n"
+                        if not results['documents'] or not len(results['documents'][0]):
+                            st.error("No se encontraron fragmentos con estos filtros. Probá ampliando la búsqueda.")
+                        else:
+                            fragmentos = results['documents'][0]
+                            metadatos = results['metadatas'][0]
 
-                                st.session_state.contexto_actual = contexto_text
+                            contexto_text = ""
+                            for i in range(len(fragmentos)):
+                                autor = metadatos[i].get("author", "Desconocido")
+                                titulo = metadatos[i].get("title", "Desconocido")
+                                contexto_text += f"\n- Fragmento de {autor} en '{titulo}':\n\"{fragmentos[i]}\"\n"
 
-                                with st.spinner("Redactando posteo con IA..."):
-                                    prompt_inicial = f"""
+                            st.session_state.contexto_actual = contexto_text
+
+                            prompt_inicial = f"""
 Actúa como el Community Manager y Editor de Contenido de la Fundación Club de la Libertad (Corrientes, Argentina).
 Tu objetivo es crear el texto para un posteo de Instagram sobre el tema: "{tema}".
 
@@ -884,12 +939,15 @@ Instrucciones:
 7. Máximo 5-6 líneas de caption. Sin hashtags.
 8. Estilo acorde a una publicación académica o de divulgación de ideas.
 """
-                                    texto_generado = generar_respuesta(prompt_inicial)
-                                    if texto_generado:
-                                        st.session_state.posteo_generado = clean_emojis(texto_generado)
+                            texto_generado = generar_respuesta(prompt_inicial)
+                            if texto_generado:
+                                st.session_state.posteo_generado = clean_emojis(texto_generado)
+                        ph_load_g.empty()
 
             if st.session_state.posteo_generado:
                 st.divider()
+                st.markdown('<div id="resultado-final-posteo"></div>', unsafe_allow_html=True)
+                scroll_to_element("resultado-final-posteo")
                 st.markdown("### :material/description: Posteo Generado")
 
                 with st.container(key="card_result_g", border=True):
@@ -997,28 +1055,30 @@ Reescribe el posteo aplicando este cambio. Mantené mención al autor y formato 
             frase_buscada = st.text_input(":material/format_quote: Ingresa una parte de la frase que recuerdes:")
             if st.button("Buscar y Generar", icon=":material/auto_awesome:", type="primary", key="btn_cita_exacta", use_container_width=True):
                 if frase_buscada:
-                    with st.spinner("Buscando en la colección..."):
-                        where_c = {"author": autor_cita} if autor_cita != "Todos" else None
-                        res = collection.query(query_texts=[frase_buscada], n_results=1, where=where_c)
-                        if res['documents'] and len(res['documents'][0]):
-                            frag = res['documents'][0][0]
-                            meta = res['metadatas'][0][0]
-                            st.success(f"Encontrado en: {meta.get('title')} - {meta.get('author')}")
-                            st.markdown(f"> “{frag}”\n— {meta.get('author')}")
-
-                            prompt = f"""Crea un post corto para Instagram en tono {tono_cita}. 
+                    ph_cita = st.empty()
+                    ph_cita.markdown(render_skeleton_loader("Buscando en la colección RAG y redactando posteo editorial..."), unsafe_allow_html=True)
+                    where_c = {"author": autor_cita} if autor_cita != "Todos" else None
+                    res = collection.query(query_texts=[frase_buscada], n_results=1, where=where_c)
+                    if res['documents'] and len(res['documents'][0]):
+                        frag = res['documents'][0][0]
+                        meta = res['metadatas'][0][0]
+                        prompt = f"""Crea un post corto para Instagram en tono {tono_cita}. 
 Usa esta cita como base obligatoria: "{frag}". 
 REGLA DE IDIOMA: La cita y todo el posteo DEBEN ESTAR OBLIGATORIAMENTE EN ESPAÑOL. Si el fragmento fuente está en inglés, tradúcelo con máxima fidelidad filosófica y estilo literario al español.
 Menciona a {meta.get('author')}. PROHIBIDO EL USO DE EMOJIS. Sin hashtags. Máximo 5 líneas de caption."""
-                            res_texto = generar_respuesta(prompt)
-                            if res_texto:
-                                st.session_state.posteo_generado = clean_emojis(res_texto)
-                                st.rerun()
-                        else:
-                            st.error("No se encontró esa frase en los libros indexados.")
+                        res_texto = generar_respuesta(prompt)
+                        ph_cita.empty()
+                        if res_texto:
+                            st.session_state.posteo_generado = clean_emojis(res_texto)
+                            st.rerun()
+                    else:
+                        ph_cita.empty()
+                        st.error("No se encontró esa frase en los libros indexados.")
 
         if st.session_state.posteo_generado and "Buscar Cita Exacta" in modo:
             st.divider()
+            st.markdown('<div id="resultado-final-posteo-exacta"></div>', unsafe_allow_html=True)
+            scroll_to_element("resultado-final-posteo-exacta")
             st.markdown("### :material/description: Posteo Generado")
             with st.container(key="card_exacta_result", border=True):
                 st.markdown(st.session_state.posteo_generado)
@@ -1051,21 +1111,28 @@ Menciona a {meta.get('author')}. PROHIBIDO EL USO DE EMOJIS. Sin hashtags. Máxi
                         st.markdown(f"**:material/menu_book: {clean_emojis(libro[0])}**")
                         st.markdown(f"*:material/sell: Temas:* {clean_emojis(libro[3])}")
 
-                if st.button("Generar Post Aleatorio del Autor", icon=":material/auto_awesome:", type="primary", use_container_width=True):
-                    with st.spinner("Creando post editorial..."):
-                        res = collection.query(query_texts=[autor_exp], n_results=1, where={"author": autor_exp})
-                        if res['documents'] and len(res['documents'][0]):
-                            frag = res['documents'][0][0]
-                            prompt = f"""Crea un post inspirador para Instagram citando a {autor_exp}. 
+                if st.button("Generar Post Aleatorio del Autor", icon=":material/auto_awesome:", type="primary", use_container_width=True, key="btn_autor_exp"):
+                    ph_exp = st.empty()
+                    ph_exp.markdown(render_skeleton_loader(f"Analizando catálogo de {autor_exp} y redactando posteo editorial..."), unsafe_allow_html=True)
+                    res = collection.query(query_texts=[autor_exp], n_results=1, where={"author": autor_exp})
+                    if res['documents'] and len(res['documents'][0]):
+                        frag = res['documents'][0][0]
+                        prompt = f"""Crea un post inspirador para Instagram citando a {autor_exp}. 
 Usa esta idea o cita como base: "{frag}". Si está en inglés, tradúcela con elegancia filosófica al español. Hazlo reflexivo. PROHIBIDO EL USO DE EMOJIS. Estilo editorial. 
 Sin hashtags. Máximo 5 líneas de caption. Todo el texto 100% en español."""
-                            res_texto = generar_respuesta(prompt)
-                            if res_texto:
-                                st.session_state.posteo_generado = clean_emojis(res_texto)
-                                st.rerun()
+                        res_texto = generar_respuesta(prompt)
+                        ph_exp.empty()
+                        if res_texto:
+                            st.session_state.posteo_generado = clean_emojis(res_texto)
+                            st.rerun()
+                    else:
+                        ph_exp.empty()
+                        st.error(f"No se encontraron citas de {autor_exp}.")
 
         if st.session_state.posteo_generado and "Explorar Autor" in modo:
             st.divider()
+            st.markdown('<div id="resultado-final-posteo-autor"></div>', unsafe_allow_html=True)
+            scroll_to_element("resultado-final-posteo-autor")
             st.markdown("### :material/description: Posteo Generado")
             with st.container(key="card_explorar_result", border=True):
                 st.markdown(st.session_state.posteo_generado)
@@ -1289,3 +1356,19 @@ with tab_admin:
                     st.rerun()
                 else:
                     st.warning("Por favor ingresa al menos el nombre del autor.")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# FOOTER INSTITUCIONAL
+# ═══════════════════════════════════════════════════════════════════════════════
+st.markdown("""
+<div class="cdl-app-footer">
+    <div class="cdl-footer-content">
+        <span>Desarrollada por <a href="https://www.linkedin.com/in/santiago-scetti" target="_blank" rel="noopener noreferrer">Santi Scetti</a> para el <strong>Club de la Libertad</strong></span>
+    </div>
+    <div class="cdl-footer-sub">
+        <span>Corrientes, Argentina · Sistema Editorial RAG &amp; IA</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+

@@ -204,12 +204,41 @@ def get_theme_css(is_dark: bool = True) -> str:
         max-width: 1440px;
         padding-left: 2.2rem;
         padding-right: 2.2rem;
-        padding-top: 1.25rem;
-        padding-bottom: 3.5rem;
+        padding-top: 1rem;
+        padding-bottom: 6.5rem;
     }}
 
-    header[data-testid="stHeader"] {{
-        background-color: transparent !important;
+    /* ── Ocultar barra superior y menú nativo de Streamlit (Share, GitHub, Menú 3 puntos, Deploy) ── */
+    header[data-testid="stHeader"],
+    [data-testid="stHeader"],
+    [data-testid="stToolbar"],
+    [data-testid="stDecoration"],
+    .stDeployButton,
+    #MainMenu {{
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+    }}
+
+    /* ── Ocultar footer nativo y badge / botón Manage app de Streamlit ── */
+    footer,
+    [data-testid="manage-app-button"],
+    div[class*="viewerBadge"],
+    div[class*="manage-app"],
+    .viewerBadge_container__r5tak,
+    .viewerBadge_link__1S137,
+    #manage-app-button,
+    div:has(> button[data-testid="manage-app-button"]),
+    div:has(> a[class*="viewerBadge"]) {{
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }}
 
     /* ── Tipografía General ── */
@@ -300,12 +329,10 @@ def get_theme_css(is_dark: bool = True) -> str:
         font-weight: 500;
     }}
 
-    /* ── Segmented Controls / Button Group (Streamlit 1.40+ & 1.64+) ── */
+    /* ── Base para TODOS los Segmented Controls (Contenedor cápsula) ── */
     html body .stApp [data-testid="stSegmentedControl"],
     html body .stApp [data-testid="stButtonGroup"]:has(button[data-variant="segmented_control"]),
-    html body .stApp .stButtonGroup:has(button[data-variant="segmented_control"]),
-    html body .stApp [class*="theme_mode_selector"] [data-testid="stButtonGroup"],
-    html body .stApp [class*="theme_mode_selector"] .stButtonGroup {{
+    html body .stApp .stButtonGroup:has(button[data-variant="segmented_control"]) {{
         background-color: {seg_bg} !important;
         border: 1.5px solid {seg_border} !important;
         border-radius: 9999px !important;
@@ -321,8 +348,12 @@ def get_theme_css(is_dark: bool = True) -> str:
         background-color: transparent !important;
         border: none !important;
         border-radius: 9999px !important;
-        gap: 4px !important;
+        gap: 3px !important;
         padding: 0 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
     }}
 
     /* Botón Inactivo: fondo transparente, sin bordes ni sombras de stBaseButton-secondary */
@@ -330,8 +361,7 @@ def get_theme_css(is_dark: bool = True) -> str:
     html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]),
     html body .stApp .stButtonGroup button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]),
     html body .stApp button[data-variant="segmented_control"]:not([data-selected]):not([aria-checked="true"]),
-    html body .stApp button[data-variant="segmented_control"][kind="segmented_control"],
-    html body .stApp [class*="theme_mode_selector"] button:not([data-selected]):not([aria-checked="true"]) {{
+    html body .stApp button[data-variant="segmented_control"][kind="segmented_control"] {{
         background-color: transparent !important;
         background: transparent !important;
         border: none !important;
@@ -343,7 +373,7 @@ def get_theme_css(is_dark: bool = True) -> str:
         border-radius: 9999px !important;
         font-size: 0.84rem !important;
         font-weight: 600 !important;
-        padding: 0.4rem 1.05rem !important;
+        padding: 0.38rem 1rem !important;
         margin: 0 !important;
         transition: all 0.15s ease !important;
         cursor: pointer !important;
@@ -377,9 +407,7 @@ def get_theme_css(is_dark: bool = True) -> str:
     html body .stApp .stButtonGroup button[data-variant="segmented_control"][aria-checked="true"],
     html body .stApp button[data-variant="segmented_control"][data-selected],
     html body .stApp button[data-variant="segmented_control"][aria-checked="true"],
-    html body .stApp button[data-variant="segmented_control"][kind="segmented_controlActive"],
-    html body .stApp [class*="theme_mode_selector"] button[data-selected],
-    html body .stApp [class*="theme_mode_selector"] button[aria-checked="true"] {{
+    html body .stApp button[data-variant="segmented_control"][kind="segmented_controlActive"] {{
         background-color: #E85D04 !important;
         background: #E85D04 !important;
         color: #FFFFFF !important;
@@ -389,7 +417,7 @@ def get_theme_css(is_dark: bool = True) -> str:
         border-radius: 9999px !important;
         font-weight: 700 !important;
         font-size: 0.84rem !important;
-        padding: 0.4rem 1.05rem !important;
+        padding: 0.38rem 1rem !important;
         box-shadow: 0 2px 6px rgba(232, 93, 4, 0.4) !important;
         transition: all 0.15s ease !important;
         margin: 0 !important;
@@ -408,12 +436,111 @@ def get_theme_css(is_dark: bool = True) -> str:
         font-weight: 700 !important;
     }}
 
-    /* ── Pestañas de Navegación ── */
-    html body .stApp .stTabs [data-baseweb="tab-list"] {{
-        gap: 12px;
-        border-bottom: 2px solid {border_card} !important;
-        padding-bottom: 4px;
+    /* ── Selector de Tema Específico (Header) en Desktop ── */
+    html body .stApp [data-testid="stColumn"]:has([class*="theme_mode_selector"]) {{
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+    }}
+    html body .stApp [class*="theme_mode_selector"] {{
+        width: fit-content !important;
+        display: inline-flex !important;
+    }}
+
+    /* ── Cápsula de Modos de Flujo de Trabajo (Inspiración Libre / Cita Exacta / Autor) ── */
+    html body .stApp [class*="modo_generador_selector"],
+    html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]),
+    html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiracion"]) {{
+        width: fit-content !important;
+        max-width: 100% !important;
+        margin: 0.35rem 0 0.85rem 0 !important;
+        border-radius: 9999px !important;
+        overflow: hidden !important;
+        padding: 3px !important;
+    }}
+
+    html body .stApp [class*="modo_generador_selector"] [data-baseweb="button-group"],
+    html body .stApp [class*="modo_generador_selector"] > div,
+    html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) [data-baseweb="button-group"],
+    html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) > div {{
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        gap: 3px !important;
+        border-radius: 9999px !important;
+    }}
+
+    html body .stApp [class*="modo_generador_selector"] [data-baseweb="button-group"]::-webkit-scrollbar,
+    html body .stApp [class*="modo_generador_selector"] > div::-webkit-scrollbar {{
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }}
+
+    html body .stApp [class*="modo_generador_selector"] button,
+    html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) button {{
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+        border-radius: 9999px !important;
+        padding: 0.42rem 1.05rem !important;
+        font-size: 0.84rem !important;
+        font-weight: 600 !important;
+        min-height: 38px !important;
+    }}
+
+    /* ── Pestañas de Navegación (Tabs) ── */
+    html body .stApp [data-testid="stTabs"] {{
         background: transparent !important;
+    }}
+    html body .stApp [data-testid="stTabs"] > div:first-child {{
+        background-color: transparent !important;
+        background: transparent !important;
+        border-bottom: 2px solid {border_card} !important;
+    }}
+    html body .stApp .stTabs [data-baseweb="tab-list"] {{
+        gap: 8px;
+        border-bottom: none !important;
+        padding-bottom: 0px;
+        background: transparent !important;
+        background-color: transparent !important;
+    }}
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tab-highlight"],
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tab-border"],
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tabs"],
+    html body .stApp [data-testid="stTabs"] div[role="tablist"] {{
+        background-color: transparent !important;
+        background: transparent !important;
+    }}
+    /* Ocultar botones de scroll BaseWeb y sus fondos blancos */
+    html body .stApp [data-testid="stTabs"] > div:first-child button:not([role="tab"]),
+    html body .stApp [data-testid="stTabs"] button[data-baseweb="button"]:not([role="tab"]),
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"] ~ button,
+    html body .stApp [data-testid="stTabs"] button ~ [data-baseweb="tab-list"],
+    html body .stApp [data-testid="stTabs"] button[aria-label*="scroll" i],
+    html body .stApp [data-testid="stTabs"] button[aria-label*="tab" i]:not([role="tab"]),
+    html body .stApp [data-testid="stTabs"] button[aria-label*="next" i],
+    html body .stApp [data-testid="stTabs"] button[aria-label*="previous" i] {{
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        pointer-events: none !important;
+    }}
+    html body .stApp [data-testid="stTabs"] > div:first-child::before,
+    html body .stApp [data-testid="stTabs"] > div:first-child::after,
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"]::before,
+    html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"]::after {{
+        display: none !important;
+        background: transparent !important;
+        background-image: none !important;
     }}
     html body .stApp .stTabs [data-baseweb="tab"] {{
         font-family: 'Plus Jakarta Sans', sans-serif !important;
@@ -884,22 +1011,197 @@ def get_theme_css(is_dark: bool = True) -> str:
         opacity: 0.85 !important;
     }}
 
-    /* Separadores */
-    hr, [data-testid="stDivider"] {{
-        border-color: {border_card} !important;
-        opacity: 0.7;
+    /* ── Streamlit Spinner Estilizado y Prominente ── */
+    html body .stApp [data-testid="stSpinner"] {{
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 14px !important;
+        background: {bg_card} !important;
+        border: 1.5px solid {border_card} !important;
+        border-radius: 14px !important;
+        padding: 1.25rem 1.6rem !important;
+        margin: 1.2rem auto !important;
+        box-shadow: {shadow_card} !important;
+        max-width: 520px !important;
+        box-sizing: border-box !important;
+    }}
+    html body .stApp [data-testid="stSpinner"] > div {{
+        border-color: rgba(232, 93, 4, 0.25) !important;
+        border-top-color: #E85D04 !important;
+        width: 26px !important;
+        height: 26px !important;
+        border-width: 3.5px !important;
+    }}
+    html body .stApp [data-testid="stSpinner"] span,
+    html body .stApp [data-testid="stSpinner"] p {{
+        color: {text_primary} !important;
+        font-weight: 700 !important;
+        font-size: 0.96rem !important;
+        letter-spacing: -0.01em;
+    }}
+
+    /* ── Skeleton Loader Editorial con Shimmer Metálico/Naranja ── */
+    .skeleton-card {{
+        background: {bg_card} !important;
+        border: 1.5px solid {border_card} !important;
+        border-radius: 14px !important;
+        padding: 1.5rem !important;
+        margin: 1.5rem 0 2rem 0 !important;
+        box-shadow: {shadow_card} !important;
+        display: flex;
+        flex-direction: column;
+        gap: 1.15rem;
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+    }}
+
+    .skeleton-header-row {{
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }}
+
+    .skeleton-shimmer {{
+        background: linear-gradient(
+            90deg,
+            {border_subtle} 0%,
+            rgba(232, 93, 4, 0.22) 50%,
+            {border_subtle} 100%
+        ) !important;
+        background-size: 200% 100% !important;
+        animation: cdlSkeletonSweep 1.4s ease-in-out infinite !important;
+        border-radius: 6px;
+    }}
+
+    @keyframes cdlSkeletonSweep {{
+        0% {{ background-position: 200% 0; }}
+        100% {{ background-position: -200% 0; }}
+    }}
+
+    .skeleton-circle {{
+        width: 42px;
+        height: 42px;
+        border-radius: 10px !important;
+        flex-shrink: 0;
+    }}
+
+    .skeleton-col {{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+    }}
+
+    .skeleton-line-title {{
+        height: 18px;
+        width: 55%;
+    }}
+
+    .skeleton-line-subtitle {{
+        height: 12px;
+        width: 35%;
+    }}
+
+    .skeleton-quote-box {{
+        background: {quote_bg};
+        border-left: 4.5px solid {quote_border};
+        border-radius: 0 10px 10px 0;
+        padding: 1.25rem 1.4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 11px;
+    }}
+
+    .skeleton-quote-line {{
+        height: 14px;
+        border-radius: 4px;
+    }}
+
+    .w-100 {{ width: 100%; }}
+    .w-90 {{ width: 90%; }}
+    .w-75 {{ width: 75%; }}
+    .w-40 {{ width: 40%; }}
+
+    .skeleton-footer-status {{
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-top: 0.25rem;
+    }}
+
+    .skeleton-spinner-ring {{
+        width: 22px;
+        height: 22px;
+        border: 3px solid rgba(232, 93, 4, 0.25);
+        border-top-color: #E85D04;
+        border-radius: 50%;
+        animation: cdlSkeletonSpin 0.75s linear infinite;
+        flex-shrink: 0;
+    }}
+
+    @keyframes cdlSkeletonSpin {{
+        0% {{ transform: rotate(0deg); }}
+        100% {{ transform: rotate(360deg); }}
+    }}
+
+    .skeleton-status-text {{
+        font-size: 0.91rem;
+        font-weight: 700;
+        color: {brand_tint_text} !important;
+        letter-spacing: -0.01em;
+    }}
+
+    /* ── Footer Institucional y Crédito a Santi Scetti ── */
+    .cdl-app-footer {{
+        margin-top: 4rem !important;
+        padding: 2.2rem 1rem 3.5rem 1rem !important;
+        border-top: 1.5px solid {border_card} !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }}
+    .cdl-footer-content {{
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        font-size: 0.9rem !important;
+        color: {text_secondary} !important;
+        flex-wrap: wrap !important;
+    }}
+    .cdl-footer-content strong {{
+        color: {text_primary} !important;
+    }}
+    .cdl-footer-content a {{
+        color: #E85D04 !important;
+        font-weight: 700 !important;
+        text-decoration: none !important;
+        border-bottom: 1.5px solid transparent !important;
+        transition: all 0.2s ease !important;
+    }}
+    .cdl-footer-content a:hover {{
+        color: #FF7A1A !important;
+        border-bottom-color: #FF7A1A !important;
+    }}
+    .cdl-footer-sub {{
+        font-size: 0.78rem !important;
+        color: {text_muted} !important;
     }}
 
     /* ═══════════════════════════════════════════════════════════════════════════════
        4. REGLAS RESPONSIVAS COMPLETAS PARA MÓVILES (@media (max-width: 768px))
        ═══════════════════════════════════════════════════════════════════════════════ */
     @media (max-width: 768px) {{
-        /* 4.1. Reducción de márgenes laterales para maximizar pantalla */
+        /* 4.1. Reducción de márgenes laterales y espacio amplio abajo */
         .block-container {{
             padding-left: 0.85rem !important;
             padding-right: 0.85rem !important;
-            padding-top: 0.85rem !important;
-            padding-bottom: 2.5rem !important;
+            padding-top: 0.65rem !important;
+            padding-bottom: 9rem !important;
             max-width: 100% !important;
         }}
 
@@ -907,8 +1209,8 @@ def get_theme_css(is_dark: bool = True) -> str:
         html body .stApp [data-testid="stHorizontalBlock"]:has(.brand-header-box) {{
             flex-direction: column !important;
             align-items: stretch !important;
-            gap: 0.65rem !important;
-            margin-bottom: 0.5rem !important;
+            gap: 0.4rem !important;
+            margin-bottom: 0.35rem !important;
         }}
 
         html body .stApp [data-testid="stHorizontalBlock"]:has(.brand-header-box) > [data-testid="stColumn"] {{
@@ -918,7 +1220,7 @@ def get_theme_css(is_dark: bool = True) -> str:
         }}
 
         .brand-header-box {{
-            padding: 0.85rem 1rem !important;
+            padding: 0.8rem 0.95rem !important;
             gap: 12px !important;
             border-radius: 12px !important;
             flex-wrap: wrap !important;
@@ -927,26 +1229,26 @@ def get_theme_css(is_dark: bool = True) -> str:
         }}
 
         .brand-logo-icon {{
-            width: 38px !important;
-            height: 38px !important;
+            width: 36px !important;
+            height: 36px !important;
             border-radius: 10px !important;
             flex-shrink: 0 !important;
         }}
 
         .brand-logo-icon .material-symbols-rounded {{
-            font-size: 22px !important;
+            font-size: 20px !important;
         }}
 
         .brand-logo-icon img {{
-            max-width: 22px !important;
-            max-height: 28px !important;
+            max-width: 20px !important;
+            max-height: 26px !important;
             object-fit: contain !important;
             display: block !important;
         }}
 
         .brand-logo-icon svg {{
-            width: 22px !important;
-            height: 22px !important;
+            width: 20px !important;
+            height: 20px !important;
         }}
 
         .brand-title-group {{
@@ -955,44 +1257,119 @@ def get_theme_css(is_dark: bool = True) -> str:
         }}
 
         .brand-title-group h1 {{
-            font-size: 1.18rem !important;
-            line-height: 1.22 !important;
+            font-size: 1.15rem !important;
+            line-height: 1.2 !important;
             word-break: break-word !important;
         }}
 
         .brand-title-group p {{
-            font-size: 0.76rem !important;
-            line-height: 1.3 !important;
+            font-size: 0.74rem !important;
+            line-height: 1.25 !important;
             margin-top: 0.15rem !important;
         }}
 
-        /* Selector de tema en móvil: 100% ancho con split 50/50 táctil */
-        html body .stApp [class*="theme_mode_selector"],
-        html body .stApp [data-testid="stSegmentedControl"],
-        html body .stApp [data-testid="stButtonGroup"] {{
+        /* Selector de tema en móvil: pastilla compacta, discreta y centrada (NO gigante al 100%) */
+        html body .stApp [data-testid="stColumn"]:has([class*="theme_mode_selector"]) {{
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
             width: 100% !important;
-            max-width: 100% !important;
-            box-sizing: border-box !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }}
 
-        html body .stApp [data-testid="stSegmentedControl"] [data-baseweb="button-group"],
-        html body .stApp [data-testid="stButtonGroup"] > div,
-        html body .stApp .stButtonGroup > div {{
+        html body .stApp [class*="theme_mode_selector"],
+        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Oscuro"]) {{
+            width: fit-content !important;
+            max-width: 210px !important;
+            margin: 0.15rem auto 0.45rem auto !important;
+            box-sizing: border-box !important;
+            border-radius: 9999px !important;
+            padding: 2px !important;
+        }}
+
+        html body .stApp [class*="theme_mode_selector"] [data-baseweb="button-group"],
+        html body .stApp [class*="theme_mode_selector"] > div {{
             width: 100% !important;
             display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 2px !important;
         }}
 
-        html body .stApp [data-testid="stSegmentedControl"] button,
-        html body .stApp [data-testid="stButtonGroup"] button[data-variant="segmented_control"] {{
-            flex: 1 1 50% !important;
+        html body .stApp [class*="theme_mode_selector"] button {{
+            flex: 1 1 auto !important;
             justify-content: center !important;
-            padding: 0.45rem 0.6rem !important;
+            padding: 0.28rem 0.72rem !important;
+            font-size: 0.76rem !important;
+            min-height: 32px !important;
+            height: 32px !important;
+            line-height: 1 !important;
+            border-radius: 9999px !important;
+        }}
+
+        /* Cápsula de Modos de Trabajo en móvil (Inspiración Libre / Cita Exacta / Autor) */
+        /* Horizontal con desplazamiento suave, jamás se deforma en óvalo vertical/huevo */
+        html body .stApp [class*="modo_generador_selector"],
+        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]),
+        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiracion"]) {{
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0.3rem 0 0.8rem 0 !important;
+            padding: 3px !important;
+            border-radius: 9999px !important;
+            box-sizing: border-box !important;
+            overflow-x: auto !important;
+        }}
+
+        html body .stApp [class*="modo_generador_selector"] [data-baseweb="button-group"],
+        html body .stApp [class*="modo_generador_selector"] > div,
+        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) [data-baseweb="button-group"],
+        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) > div {{
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            gap: 3px !important;
+            width: 100% !important;
+            justify-content: flex-start !important;
+        }}
+
+        html body .stApp [class*="modo_generador_selector"] button,
+        html body .stApp [data-testid="stSegmentedControl"]:has(button[aria-label*="Inspiración"]) button {{
+            flex: 0 0 auto !important;
+            white-space: nowrap !important;
+            padding: 0.36rem 0.82rem !important;
+            font-size: 0.79rem !important;
+            min-height: 34px !important;
+            height: 34px !important;
+            border-radius: 9999px !important;
+        }}
+
+        /* Jerarquía Tipográfica y Espaciado Compacto en Móvil */
+        html body .stApp h1,
+        html body .stApp h2 {{
+            font-size: 1.25rem !important;
+            line-height: 1.25 !important;
+            margin-top: 0.4rem !important;
+            margin-bottom: 0.3rem !important;
+            word-break: break-word !important;
+        }}
+        html body .stApp h3 {{
+            font-size: 1.05rem !important;
+            line-height: 1.25 !important;
+            margin-top: 0.35rem !important;
+            margin-bottom: 0.25rem !important;
+        }}
+        html body .stApp [data-testid="stCaptionContainer"] {{
             font-size: 0.8rem !important;
-            min-height: 40px !important;
+            margin-bottom: 0.5rem !important;
         }}
 
         /* 4.3. Pestañas de Navegación con Scroll Horizontal Táctil */
-        html body .stApp .stTabs [data-baseweb="tab-list"] {{
+        html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"] {{
             overflow-x: auto !important;
             overflow-y: hidden !important;
             display: flex !important;
@@ -1001,42 +1378,28 @@ def get_theme_css(is_dark: bool = True) -> str:
             -webkit-overflow-scrolling: touch !important;
             scrollbar-width: none !important;
             -ms-overflow-style: none !important;
-            gap: 6px !important;
-            padding-bottom: 4px !important;
+            gap: 4px !important;
+            padding-bottom: 2px !important;
             padding-left: 2px !important;
             padding-right: 2px !important;
             border-bottom: 1.5px solid {border_card} !important;
         }}
 
-        html body .stApp .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar {{
+        html body .stApp [data-testid="stTabs"] [data-baseweb="tab-list"]::-webkit-scrollbar {{
             display: none !important;
             width: 0 !important;
             height: 0 !important;
         }}
 
-        html body .stApp .stTabs [data-baseweb="tab"] {{
-            font-size: 0.83rem !important;
-            padding: 0.55rem 0.85rem !important;
+        html body .stApp [data-testid="stTabs"] [data-baseweb="tab"] {{
+            font-size: 0.82rem !important;
+            padding: 0.5rem 0.75rem !important;
             flex-shrink: 0 !important;
             white-space: nowrap !important;
-            border-radius: 8px 8px 0 0 !important;
+            border-radius: 6px 6px 0 0 !important;
         }}
 
-        /* Ocultar chevron/flechas de scroll ÚNICAMENTE en la cabecera de pestañas BaseWeb, NUNCA en el contenido */
-        html body .stApp .stTabs > div:first-child > button,
-        html body .stApp .stTabs [data-baseweb="tab-list"] ~ button[data-baseweb="button"]:not([role="tab"]) {{
-            display: none !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-            width: 0 !important;
-            height: 0 !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border: none !important;
-            background: transparent !important;
-        }}
-
-        /* Garantizar visibilidad, interactividad y tamaño táctil de TODOS los botones y píldoras en móvil */
+        /* Garantizar visibilidad, interactividad y tamaño táctil de botones y píldoras en móvil */
         html body .stApp .stTabs [data-baseweb="tab-panel"] button,
         html body .stApp .stTabs [data-testid="stTabContent"] button,
         html body .stApp .stTabs .stButton,
